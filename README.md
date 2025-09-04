@@ -109,14 +109,13 @@ java -jar target/ecobazaar-backend-1.0.0.jar
 2. Select Java environment
 3. Configure environment variables:
    - `FIREBASE_PROJECT_ID`: Your Firebase project ID
-   - `FIREBASE_CREDENTIALS_PATH`: `/opt/render/project/src/main/resources/firebase-service-account.json`
+   - `FIREBASE_CREDENTIALS_JSON`: Your complete Firebase service account JSON as a string
    - `JWT_SECRET`: Your JWT secret key
    - `DB_PASSWORD`: Database password
    - `CORS_ORIGINS`: Allowed CORS origins
-4. Upload Firebase service account file to the mounted disk
-5. Deploy automatically
+4. Deploy automatically
 
-**Important**: Make sure to upload your `firebase-service-account.json` file to the mounted disk at `/opt/render/project/src/main/resources/` after deployment.
+**Note**: For free tier users, Firebase credentials are passed via environment variables instead of file upload.
 
 ### Local Deployment
 ```bash

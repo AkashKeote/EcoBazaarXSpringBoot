@@ -87,4 +87,7 @@ logs/
 temp/
 uploads/
 
+# Deployment guides with sensitive data
+DEPLOYMENT_GUIDE.md
+
 
