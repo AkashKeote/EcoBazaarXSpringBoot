@@ -3,7 +3,6 @@ services:
     name: ecobazaar-backend
     env: docker
     dockerfilePath: ./Dockerfile
-    dockerContext: .
     plan: free
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -20,5 +19,3 @@ services:
         value: ecobazaar2024
       - key: CORS_ORIGINS
         value: https://ecobazzarx.web.app/
-
-
