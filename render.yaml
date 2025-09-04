@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ecobazaar-backend
+    env: java
+    buildCommand: mvn clean install
+    startCommand: java -jar target/ecobazaar-backend-1.0.0.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: SERVER_PORT
+        value: 10000
+      - key: FIREBASE_PROJECT_ID
+        value: ecobazzarx
+      - key: FIREBASE_CREDENTIALS_PATH
+        value: /opt/render/project/src/firebase-service-account.json
+    disk:
+      name: ecobazaar-data
+      mountPath: /opt/render/project/src
+      sizeGB: 1
