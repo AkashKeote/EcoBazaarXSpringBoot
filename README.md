@@ -105,16 +105,42 @@ java -jar target/ecobazaar-backend-1.0.0.jar
 ## 🚀 Deployment
 
 ### Render (Recommended)
-1. Connect GitHub repository
+1. Connect GitHub repository to Render
 2. Select Java environment
-3. Set environment variables
-4. Deploy automatically
+3. Configure environment variables:
+   - `FIREBASE_PROJECT_ID`: Your Firebase project ID
+   - `FIREBASE_CREDENTIALS_PATH`: `/opt/render/project/src/main/resources/firebase-service-account.json`
+   - `JWT_SECRET`: Your JWT secret key
+   - `DB_PASSWORD`: Database password
+   - `CORS_ORIGINS`: Allowed CORS origins
+4. Upload Firebase service account file to the mounted disk
+5. Deploy automatically
+
+**Important**: Make sure to upload your `firebase-service-account.json` file to the mounted disk at `/opt/render/project/src/main/resources/` after deployment.
+
+### Local Deployment
+```bash
+# Windows
+deploy.bat
+
+# Linux/Mac
+./deploy.sh
+```
+
+### Docker Deployment
+```bash
+# Build Docker image
+docker build -t ecobazaar-backend .
+
+# Run container
+docker run -p 10000:10000 ecobazaar-backend
+```
 
 ### Other Platforms
 - **Heroku** - Easy deployment
 - **AWS** - Scalable infrastructure
 - **Google Cloud** - Firebase integration
-- **Docker** - Containerized deployment
+- **DigitalOcean** - Simple deployment
 
 ## 🔒 Security
 

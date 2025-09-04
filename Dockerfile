@@ -18,6 +18,9 @@ RUN chmod +x mvnw
 # Build the application
 RUN ./mvnw clean install -DskipTests
 
+# Create directory for Firebase credentials if it doesn't exist
+RUN mkdir -p /opt/render/project/src/main/resources
+
 # Expose port
 EXPOSE 10000
 

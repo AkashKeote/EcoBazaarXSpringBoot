@@ -47,8 +47,26 @@ public class FirebaseConfig {
             // Check if Firebase is already initialized
             if (FirebaseApp.getApps().isEmpty()) {
                 
-                // Load service account credentials
-                InputStream serviceAccount = new FileInputStream(new File(credentialsPath));
+                InputStream serviceAccount;
+                
+                // Try to load from file path first, then fallback to classpath
+                try {
+                    File credentialsFile = new File(credentialsPath);
+                    if (credentialsFile.exists() && credentialsFile.isFile()) {
+                        serviceAccount = new FileInputStream(credentialsFile);
+                        System.out.println("📁 Loading Firebase credentials from file: " + credentialsPath);
+                    } else {
+                        // Fallback to classpath resource
+                        ClassPathResource resource = new ClassPathResource("firebase-service-account.json");
+                        serviceAccount = resource.getInputStream();
+                        System.out.println("📦 Loading Firebase credentials from classpath");
+                    }
+                } catch (Exception e) {
+                    // Final fallback to classpath
+                    ClassPathResource resource = new ClassPathResource("firebase-service-account.json");
+                    serviceAccount = resource.getInputStream();
+                    System.out.println("📦 Fallback: Loading Firebase credentials from classpath");
+                }
                 
                 // Configure Firebase options
                 FirebaseOptions options = FirebaseOptions.builder()
@@ -80,8 +98,26 @@ public class FirebaseConfig {
     @Bean
     public Firestore firestore() {
         try {
-            // Load service account credentials for Firestore
-            InputStream serviceAccount = new FileInputStream(new File(credentialsPath));
+            InputStream serviceAccount;
+            
+            // Try to load from file path first, then fallback to classpath
+            try {
+                File credentialsFile = new File(credentialsPath);
+                if (credentialsFile.exists() && credentialsFile.isFile()) {
+                    serviceAccount = new FileInputStream(credentialsFile);
+                    System.out.println("📁 Loading Firestore credentials from file: " + credentialsPath);
+                } else {
+                    // Fallback to classpath resource
+                    ClassPathResource resource = new ClassPathResource("firebase-service-account.json");
+                    serviceAccount = resource.getInputStream();
+                    System.out.println("📦 Loading Firestore credentials from classpath");
+                }
+            } catch (Exception e) {
+                // Final fallback to classpath
+                ClassPathResource resource = new ClassPathResource("firebase-service-account.json");
+                serviceAccount = resource.getInputStream();
+                System.out.println("📦 Fallback: Loading Firestore credentials from classpath");
+            }
             
             FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
                 .setProjectId(projectId)
