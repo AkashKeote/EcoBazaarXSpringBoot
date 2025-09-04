@@ -58,11 +58,12 @@
         </dependency>
 
         <!-- Google Cloud Firestore (included in Firebase Admin SDK) -->
-        <dependency>
+        <!-- Note: Firebase Admin SDK already includes Firestore support -->
+        <!-- <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-firestore</artifactId>
-            <version>3.13.0</version>
-        </dependency>
+            <version>4.9.0</version>
+        </dependency> -->
 
         <!-- JWT for Authentication -->
         <dependency>
