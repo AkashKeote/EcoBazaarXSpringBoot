@@ -1,12 +1,9 @@
 services:
   - type: web
     name: ecobazaar-backend
-    env: java
-    buildCommand: ./mvnw clean install -DskipTests
-    startCommand: java -jar target/ecobazaar-backend-1.0.0.jar
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: JAVA_VERSION
-        value: 17
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SERVER_PORT

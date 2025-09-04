@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+DEPLOYMENT_GUIDE.md
+
+# IDE
+.vscode
+.idea
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+temp/
+tmp/
+
+# Build artifacts (will be created during build)
+target/
+
+# Maven wrapper (will be copied explicitly)
+.mvn/wrapper/maven-wrapper.jar
+
+# Deployment scripts
+deploy.sh
+deploy.bat
+
+# Template files
+*.template
+
+# Environment files
+.env
+.env.local
+.env.production

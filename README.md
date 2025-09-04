@@ -106,7 +106,7 @@ java -jar target/ecobazaar-backend-1.0.0.jar
 
 ### Render (Recommended)
 1. Connect GitHub repository to Render
-2. Select Java environment
+2. Select **Docker** environment (not Java)
 3. Configure environment variables:
    - `FIREBASE_PROJECT_ID`: Your Firebase project ID
    - `FIREBASE_CREDENTIALS_JSON`: Your complete Firebase service account JSON as a string
@@ -115,7 +115,7 @@ java -jar target/ecobazaar-backend-1.0.0.jar
    - `CORS_ORIGINS`: Allowed CORS origins
 4. Deploy automatically
 
-**Note**: For free tier users, Firebase credentials are passed via environment variables instead of file upload.
+**Note**: Using Docker environment on Render provides better compatibility and control.
 
 ### Local Deployment
 ```bash

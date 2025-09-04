@@ -18,11 +18,12 @@ RUN chmod +x mvnw
 # Build the application
 RUN ./mvnw clean install -DskipTests
 
-# Create directory for Firebase credentials if it doesn't exist
-RUN mkdir -p /opt/render/project/src/main/resources
-
 # Expose port
 EXPOSE 10000
+
+# Set default environment variables
+ENV SPRING_PROFILES_ACTIVE=prod
+ENV SERVER_PORT=10000
 
 # Run the application
 CMD ["java", "-jar", "target/ecobazaar-backend-1.0.0.jar"]
