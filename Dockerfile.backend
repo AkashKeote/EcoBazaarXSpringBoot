@@ -19,7 +19,7 @@ RUN ./mvnw dependency:go-offline -B
 COPY src src
 
 # Build the application
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests -Dspring-boot.repackage.main-class=com.ecobazaar.backend.EcoBazaarXApplication
 
 # Expose port
 EXPOSE 8080
