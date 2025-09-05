@@ -1,7 +1,6 @@
 package com.ecobazaar.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Map;
 
 /**
  * Settings Model Class
