@@ -13,20 +13,17 @@ public class Settings {
     @JsonProperty("userId")
     private String userId;
 
-    @JsonProperty("notifications")
-    private NotificationSettings notifications;
+    @JsonProperty("appPreferences")
+    private AppPreferences appPreferences;
 
-    @JsonProperty("privacy")
-    private PrivacySettings privacy;
+    @JsonProperty("notificationSettings")
+    private NotificationSettings notificationSettings;
 
-    @JsonProperty("preferences")
-    private AppPreferences preferences;
+    @JsonProperty("privacySettings")
+    private PrivacySettings privacySettings;
 
-    @JsonProperty("app")
-    private AppSettings app;
-
-    @JsonProperty("sync")
-    private SyncSettings sync;
+    @JsonProperty("syncSettings")
+    private SyncSettings syncSettings;
 
     @JsonProperty("createdAt")
     private String createdAt;
@@ -38,35 +35,31 @@ public class Settings {
     public Settings() {}
 
     // Constructor with all fields
-    public Settings(String userId, NotificationSettings notifications, 
-                   PrivacySettings privacy, AppPreferences preferences, 
-                   AppSettings app, SyncSettings sync) {
+    public Settings(String userId, AppPreferences appPreferences, 
+                   NotificationSettings notificationSettings, PrivacySettings privacySettings, 
+                   SyncSettings syncSettings) {
         this.userId = userId;
-        this.notifications = notifications;
-        this.privacy = privacy;
-        this.preferences = preferences;
-        this.app = app;
-        this.sync = sync;
+        this.appPreferences = appPreferences;
+        this.notificationSettings = notificationSettings;
+        this.privacySettings = privacySettings;
+        this.syncSettings = syncSettings;
     }
 
     // Getters and Setters
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
 
-    public NotificationSettings getNotifications() { return notifications; }
-    public void setNotifications(NotificationSettings notifications) { this.notifications = notifications; }
+    public AppPreferences getAppPreferences() { return appPreferences; }
+    public void setAppPreferences(AppPreferences appPreferences) { this.appPreferences = appPreferences; }
 
-    public PrivacySettings getPrivacy() { return privacy; }
-    public void setPrivacy(PrivacySettings privacy) { this.privacy = privacy; }
+    public NotificationSettings getNotificationSettings() { return notificationSettings; }
+    public void setNotificationSettings(NotificationSettings notificationSettings) { this.notificationSettings = notificationSettings; }
 
-    public AppPreferences getPreferences() { return preferences; }
-    public void setPreferences(AppPreferences preferences) { this.preferences = preferences; }
+    public PrivacySettings getPrivacySettings() { return privacySettings; }
+    public void setPrivacySettings(PrivacySettings privacySettings) { this.privacySettings = privacySettings; }
 
-    public AppSettings getApp() { return app; }
-    public void setApp(AppSettings app) { this.app = app; }
-
-    public SyncSettings getSync() { return sync; }
-    public void setSync(SyncSettings sync) { this.sync = sync; }
+    public SyncSettings getSyncSettings() { return syncSettings; }
+    public void setSyncSettings(SyncSettings syncSettings) { this.syncSettings = syncSettings; }
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
@@ -78,18 +71,12 @@ public class Settings {
     public String toString() {
         return "Settings{" +
                 "userId='" + userId + '\'' +
-                ", notifications=" + notifications +
-                ", privacy=" + privacy +
-                ", preferences=" + preferences +
-                ", app=" + app +
-                ", sync=" + sync +
+                ", appPreferences=" + appPreferences +
+                ", notificationSettings=" + notificationSettings +
+                ", privacySettings=" + privacySettings +
+                ", syncSettings=" + syncSettings +
                 ", createdAt='" + createdAt + '\'' +
                 ", lastUpdated='" + lastUpdated + '\'' +
                 '}';
     }
 }
-
-
-
-
-

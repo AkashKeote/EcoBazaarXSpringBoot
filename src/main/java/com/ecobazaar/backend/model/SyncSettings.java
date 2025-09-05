@@ -12,39 +12,43 @@ public class SyncSettings {
     @JsonProperty("autoSync")
     private boolean autoSync;
 
-    @JsonProperty("offlineMode")
-    private boolean offlineMode;
+    @JsonProperty("syncFrequency")
+    private String syncFrequency;
+
+    @JsonProperty("lastSync")
+    private String lastSync;
 
     // Default constructor
     public SyncSettings() {
         // Default values
         this.autoSync = true;
-        this.offlineMode = false;
+        this.syncFrequency = "daily";
+        this.lastSync = "";
     }
 
     // Constructor with all fields
-    public SyncSettings(boolean autoSync, boolean offlineMode) {
+    public SyncSettings(boolean autoSync, String syncFrequency, String lastSync) {
         this.autoSync = autoSync;
-        this.offlineMode = offlineMode;
+        this.syncFrequency = syncFrequency;
+        this.lastSync = lastSync;
     }
 
     // Getters and Setters
     public boolean isAutoSync() { return autoSync; }
     public void setAutoSync(boolean autoSync) { this.autoSync = autoSync; }
 
-    public boolean isOfflineMode() { return offlineMode; }
-    public void setOfflineMode(boolean offlineMode) { this.offlineMode = offlineMode; }
+    public String getSyncFrequency() { return syncFrequency; }
+    public void setSyncFrequency(String syncFrequency) { this.syncFrequency = syncFrequency; }
+
+    public String getLastSync() { return lastSync; }
+    public void setLastSync(String lastSync) { this.lastSync = lastSync; }
 
     @Override
     public String toString() {
         return "SyncSettings{" +
                 "autoSync=" + autoSync +
-                ", offlineMode=" + offlineMode +
+                ", syncFrequency='" + syncFrequency + '\'' +
+                ", lastSync='" + lastSync + '\'' +
                 '}';
     }
 }
-
-
-
-
-

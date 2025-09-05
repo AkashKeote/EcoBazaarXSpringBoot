@@ -9,6 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class AppPreferences {
 
+    @JsonProperty("theme")
+    private String theme;
+
     @JsonProperty("darkModeEnabled")
     private boolean darkModeEnabled;
 
@@ -30,6 +33,7 @@ public class AppPreferences {
     // Default constructor
     public AppPreferences() {
         // Default values
+        this.theme = "light";
         this.darkModeEnabled = false;
         this.autoSaveEnabled = true;
         this.hapticFeedbackEnabled = true;
@@ -39,8 +43,9 @@ public class AppPreferences {
     }
 
     // Constructor with all fields
-    public AppPreferences(boolean darkModeEnabled, boolean autoSaveEnabled, boolean hapticFeedbackEnabled,
+    public AppPreferences(String theme, boolean darkModeEnabled, boolean autoSaveEnabled, boolean hapticFeedbackEnabled,
                          String language, String currency, String timezone) {
+        this.theme = theme;
         this.darkModeEnabled = darkModeEnabled;
         this.autoSaveEnabled = autoSaveEnabled;
         this.hapticFeedbackEnabled = hapticFeedbackEnabled;
@@ -50,6 +55,9 @@ public class AppPreferences {
     }
 
     // Getters and Setters
+    public String getTheme() { return theme; }
+    public void setTheme(String theme) { this.theme = theme; }
+
     public boolean isDarkModeEnabled() { return darkModeEnabled; }
     public void setDarkModeEnabled(boolean darkModeEnabled) { this.darkModeEnabled = darkModeEnabled; }
 
@@ -71,7 +79,8 @@ public class AppPreferences {
     @Override
     public String toString() {
         return "AppPreferences{" +
-                "darkModeEnabled=" + darkModeEnabled +
+                "theme='" + theme + '\'' +
+                ", darkModeEnabled=" + darkModeEnabled +
                 ", autoSaveEnabled=" + autoSaveEnabled +
                 ", hapticFeedbackEnabled=" + hapticFeedbackEnabled +
                 ", language='" + language + '\'' +

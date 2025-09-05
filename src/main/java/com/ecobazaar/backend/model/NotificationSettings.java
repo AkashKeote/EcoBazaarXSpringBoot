@@ -9,71 +9,94 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class NotificationSettings {
 
-    @JsonProperty("pushNotificationsEnabled")
-    private boolean pushNotificationsEnabled;
+    @JsonProperty("notificationsEnabled")
+    private Boolean notificationsEnabled;
 
-    @JsonProperty("orderNotificationsEnabled")
-    private boolean orderNotificationsEnabled;
+    @JsonProperty("emailNotifications")
+    private Boolean emailNotifications;
+
+    @JsonProperty("pushNotifications")
+    private Boolean pushNotifications;
+
+    @JsonProperty("smsNotifications")
+    private Boolean smsNotifications;
 
     @JsonProperty("ecoTipsEnabled")
-    private boolean ecoTipsEnabled;
+    private Boolean ecoTipsEnabled;
 
-    @JsonProperty("promotionalNotificationsEnabled")
-    private boolean promotionalNotificationsEnabled;
+    @JsonProperty("challengeReminders")
+    private Boolean challengeReminders;
 
-    @JsonProperty("carbonTrackingEnabled")
-    private boolean carbonTrackingEnabled;
+    @JsonProperty("orderUpdates")
+    private Boolean orderUpdates;
+
+    @JsonProperty("promotionalEmails")
+    private Boolean promotionalEmails;
 
     // Default constructor
     public NotificationSettings() {
         // Default values
-        this.pushNotificationsEnabled = true;
-        this.orderNotificationsEnabled = true;
+        this.notificationsEnabled = true;
+        this.emailNotifications = true;
+        this.pushNotifications = true;
+        this.smsNotifications = false;
         this.ecoTipsEnabled = true;
-        this.promotionalNotificationsEnabled = true;
-        this.carbonTrackingEnabled = true;
+        this.challengeReminders = true;
+        this.orderUpdates = true;
+        this.promotionalEmails = false;
     }
 
     // Constructor with all fields
-    public NotificationSettings(boolean pushNotificationsEnabled, boolean orderNotificationsEnabled,
-                              boolean ecoTipsEnabled, boolean promotionalNotificationsEnabled,
-                              boolean carbonTrackingEnabled) {
-        this.pushNotificationsEnabled = pushNotificationsEnabled;
-        this.orderNotificationsEnabled = orderNotificationsEnabled;
+    public NotificationSettings(Boolean notificationsEnabled, Boolean emailNotifications,
+                              Boolean pushNotifications, Boolean smsNotifications,
+                              Boolean ecoTipsEnabled, Boolean challengeReminders,
+                              Boolean orderUpdates, Boolean promotionalEmails) {
+        this.notificationsEnabled = notificationsEnabled;
+        this.emailNotifications = emailNotifications;
+        this.pushNotifications = pushNotifications;
+        this.smsNotifications = smsNotifications;
         this.ecoTipsEnabled = ecoTipsEnabled;
-        this.promotionalNotificationsEnabled = promotionalNotificationsEnabled;
-        this.carbonTrackingEnabled = carbonTrackingEnabled;
+        this.challengeReminders = challengeReminders;
+        this.orderUpdates = orderUpdates;
+        this.promotionalEmails = promotionalEmails;
     }
 
     // Getters and Setters
-    public boolean isPushNotificationsEnabled() { return pushNotificationsEnabled; }
-    public void setPushNotificationsEnabled(boolean pushNotificationsEnabled) { this.pushNotificationsEnabled = pushNotificationsEnabled; }
+    public Boolean getNotificationsEnabled() { return notificationsEnabled; }
+    public void setNotificationsEnabled(Boolean notificationsEnabled) { this.notificationsEnabled = notificationsEnabled; }
 
-    public boolean isOrderNotificationsEnabled() { return orderNotificationsEnabled; }
-    public void setOrderNotificationsEnabled(boolean orderNotificationsEnabled) { this.orderNotificationsEnabled = orderNotificationsEnabled; }
+    public Boolean getEmailNotifications() { return emailNotifications; }
+    public void setEmailNotifications(Boolean emailNotifications) { this.emailNotifications = emailNotifications; }
 
-    public boolean isEcoTipsEnabled() { return ecoTipsEnabled; }
-    public void setEcoTipsEnabled(boolean ecoTipsEnabled) { this.ecoTipsEnabled = ecoTipsEnabled; }
+    public Boolean getPushNotifications() { return pushNotifications; }
+    public void setPushNotifications(Boolean pushNotifications) { this.pushNotifications = pushNotifications; }
 
-    public boolean isPromotionalNotificationsEnabled() { return promotionalNotificationsEnabled; }
-    public void setPromotionalNotificationsEnabled(boolean promotionalNotificationsEnabled) { this.promotionalNotificationsEnabled = promotionalNotificationsEnabled; }
+    public Boolean getSmsNotifications() { return smsNotifications; }
+    public void setSmsNotifications(Boolean smsNotifications) { this.smsNotifications = smsNotifications; }
 
-    public boolean isCarbonTrackingEnabled() { return carbonTrackingEnabled; }
-    public void setCarbonTrackingEnabled(boolean carbonTrackingEnabled) { this.carbonTrackingEnabled = carbonTrackingEnabled; }
+    public Boolean getEcoTipsEnabled() { return ecoTipsEnabled; }
+    public void setEcoTipsEnabled(Boolean ecoTipsEnabled) { this.ecoTipsEnabled = ecoTipsEnabled; }
+
+    public Boolean getChallengeReminders() { return challengeReminders; }
+    public void setChallengeReminders(Boolean challengeReminders) { this.challengeReminders = challengeReminders; }
+
+    public Boolean getOrderUpdates() { return orderUpdates; }
+    public void setOrderUpdates(Boolean orderUpdates) { this.orderUpdates = orderUpdates; }
+
+    public Boolean getPromotionalEmails() { return promotionalEmails; }
+    public void setPromotionalEmails(Boolean promotionalEmails) { this.promotionalEmails = promotionalEmails; }
 
     @Override
     public String toString() {
         return "NotificationSettings{" +
-                "pushNotificationsEnabled=" + pushNotificationsEnabled +
-                ", orderNotificationsEnabled=" + orderNotificationsEnabled +
+                "notificationsEnabled=" + notificationsEnabled +
+                ", emailNotifications=" + emailNotifications +
+                ", pushNotifications=" + pushNotifications +
+                ", smsNotifications=" + smsNotifications +
                 ", ecoTipsEnabled=" + ecoTipsEnabled +
-                ", promotionalNotificationsEnabled=" + promotionalNotificationsEnabled +
-                ", carbonTrackingEnabled=" + carbonTrackingEnabled +
+                ", challengeReminders=" + challengeReminders +
+                ", orderUpdates=" + orderUpdates +
+                ", promotionalEmails=" + promotionalEmails +
                 '}';
     }
 }
-
-
-
-
-

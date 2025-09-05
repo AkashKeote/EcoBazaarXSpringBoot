@@ -50,20 +50,13 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Firebase Admin SDK -->
+        <!-- MySQL Database -->
         <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>${firebase.admin.version}</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
 
-        <!-- Google Cloud Firestore (included in Firebase Admin SDK) -->
-        <!-- Note: Firebase Admin SDK already includes Firestore support -->
-        <!-- <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>google-cloud-firestore</artifactId>
-            <version>4.9.0</version>
-        </dependency> -->
 
         <!-- JWT for Authentication -->
         <dependency>
@@ -86,11 +79,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Database -->
+        <!-- Database (H2 for testing, MySQL for production) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
 
         <!-- Utilities -->

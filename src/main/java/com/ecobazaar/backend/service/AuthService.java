@@ -1,15 +1,16 @@
 package com.ecobazaar.backend.service;
 
+import com.ecobazaar.backend.entity.User;
+import com.ecobazaar.backend.entity.UserRole;
 import com.ecobazaar.backend.model.AuthResponse;
 import com.ecobazaar.backend.model.UserRegistration;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.ecobazaar.backend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -17,18 +18,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Authentication Service for EcoBazaarX
- * Handles user authentication, JWT token generation, and Firebase integration
+ * Handles user authentication, JWT token generation, and MySQL database integration
  */
 @Service
 public class AuthService {
 
     @Autowired
-    private Firestore firestore;
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // JWT Secret Key (in production, use environment variable)
     private static final String JWT_SECRET = "EcoBazaarXSecretKeyForJWTTokenGeneration2024";
@@ -43,38 +48,41 @@ public class AuthService {
      */
     public AuthResponse authenticateUser(String email, String password, String role) {
         try {
-            // Query Firestore for user with matching email and role
-            QuerySnapshot querySnapshot = firestore.collection("users")
-                .whereEqualTo("email", email)
-                .whereEqualTo("role", role)
-                .limit(1)
-                .get()
-                .get();
-
-            if (querySnapshot.isEmpty()) {
-                return new AuthResponse(false, "Invalid email or role", null, null, null, null);
+            // Find user by email
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            
+            if (userOpt.isEmpty()) {
+                return new AuthResponse(false, "User not found", null, null, null, null);
             }
-
-            QueryDocumentSnapshot userDoc = querySnapshot.getDocuments().get(0);
-            Map<String, Object> userData = userDoc.getData();
-
-            // In a real application, you would verify the password hash here
-            // For now, we'll assume the password is correct if user exists
-            String userId = userDoc.getId();
-            String userName = (String) userData.get("name");
-            String userRole = (String) userData.get("role");
-
+            
+            User user = userOpt.get();
+            
+            // Check if user is active
+            if (!user.getIsActive()) {
+                return new AuthResponse(false, "User account is deactivated", null, null, null, null);
+            }
+            
+            // Check password
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                return new AuthResponse(false, "Invalid password", null, null, null, null);
+            }
+            
+            // Check role
+            if (!user.getRole().toString().equalsIgnoreCase(role)) {
+                return new AuthResponse(false, "Invalid role", null, null, null, null);
+            }
+            
             // Generate JWT tokens
-            String accessToken = generateAccessToken(userId, email, userRole);
-            String refreshToken = generateRefreshToken(userId, email);
-
+            String accessToken = generateAccessToken(user.getId().toString(), email, role);
+            String refreshToken = generateRefreshToken(user.getId().toString(), email);
+            
             return new AuthResponse(
                 true,
                 "Login successful",
                 accessToken,
                 refreshToken,
-                userId,
-                userRole
+                user.getId().toString(),
+                role
             );
 
         } catch (Exception e) {
@@ -102,60 +110,72 @@ public class AuthService {
             }
 
             // Check if user already exists
-            QuerySnapshot existingUsers = firestore.collection("users")
-                .whereEqualTo("email", registration.getEmail())
-                .get()
-                .get();
-
-            if (!existingUsers.isEmpty()) {
+            if (userRepository.existsByEmail(registration.getEmail())) {
                 return new AuthResponse(false, "User with this email already exists", null, null, null, null);
             }
 
-            // Create new user document
-            String userId = UUID.randomUUID().toString();
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("id", userId);
-            userData.put("name", registration.getName());
-            userData.put("email", registration.getEmail());
-            userData.put("role", registration.getRole());
-            userData.put("status", "Active");
-            userData.put("joinDate", new Date());
-            userData.put("createdAt", new Date());
-            userData.put("updatedAt", new Date());
-            userData.put("phone", registration.getPhone() != null ? registration.getPhone() : "");
-            userData.put("address", registration.getAddress() != null ? registration.getAddress() : "");
-            userData.put("preferences", Map.of(
-                "notifications", true,
-                "emailNotifications", true,
-                "darkMode", false
-            ));
-            userData.put("stats", Map.of(
-                "totalOrders", 0,
-                "totalSpent", 0.0,
-                "carbonSaved", 0.0,
-                "ecoPoints", 0,
-                "streakDays", 0
-            ));
+            // Create new user
+            User user = new User();
+            user.setName(registration.getName());
+            user.setEmail(registration.getEmail());
+            user.setPassword(passwordEncoder.encode(registration.getPassword()));
+            user.setPhone(registration.getPhone() != null ? registration.getPhone() : "");
+            user.setRole(UserRole.valueOf(registration.getRole().toUpperCase()));
+            user.setIsActive(true);
 
-            // Save to Firestore
-            firestore.collection("users").document(userId).set(userData).get();
-
-            // Generate JWT tokens
-            String accessToken = generateAccessToken(userId, registration.getEmail(), registration.getRole());
-            String refreshToken = generateRefreshToken(userId, registration.getEmail());
+            // Save to MySQL
+            User savedUser = userRepository.save(user);
 
             return new AuthResponse(
                 true,
-                "Registration successful",
-                accessToken,
-                refreshToken,
-                userId,
-                registration.getRole()
+                "User registered successfully",
+                null,
+                null,
+                savedUser.getId().toString(),
+                savedUser.getRole().toString()
             );
 
         } catch (Exception e) {
+            System.err.println("❌ Registration error: " + e.getMessage());
             return new AuthResponse(false, "Registration failed: " + e.getMessage(), null, null, null, null);
         }
+    }
+
+    /**
+     * Generate access token
+     */
+    private String generateAccessToken(String userId, String email, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("email", email);
+        claims.put("role", role);
+        claims.put("type", "access");
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /**
+     * Generate refresh token
+     */
+    private String generateRefreshToken(String userId, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("email", email);
+        claims.put("type", "refresh");
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     /**
@@ -164,20 +184,26 @@ public class AuthService {
     public Map<String, Object> validateToken(String token) {
         try {
             Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                    .verifyWith(SECRET_KEY)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-            return Map.of(
-                "valid", true,
-                "userId", claims.get("userId"),
-                "email", claims.get("email"),
-                "role", claims.get("role"),
-                "expiresAt", claims.getExpiration()
-            );
+            Map<String, Object> result = new HashMap<>();
+            result.put("valid", true);
+            result.put("userId", claims.get("userId"));
+            result.put("email", claims.get("email"));
+            result.put("role", claims.get("role"));
+            result.put("type", claims.get("type"));
+            result.put("expiration", claims.getExpiration());
+
+            return result;
+
         } catch (Exception e) {
-            return Map.of("valid", false, "message", "Invalid token: " + e.getMessage());
+            Map<String, Object> result = new HashMap<>();
+            result.put("valid", false);
+            result.put("error", e.getMessage());
+            return result;
         }
     }
 
@@ -186,30 +212,23 @@ public class AuthService {
      */
     public AuthResponse refreshToken(String refreshToken) {
         try {
-            Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .build()
-                .parseClaimsJws(refreshToken)
-                .getBody();
-
-            String userId = (String) claims.get("userId");
-            String email = (String) claims.get("email");
-
-            // Get user role from Firestore
-            Map<String, Object> userData = firestore.collection("users")
-                .document(userId)
-                .get()
-                .get()
-                .getData();
-
-            if (userData == null) {
-                return new AuthResponse(false, "User not found", null, null, null, null);
+            Map<String, Object> validation = validateToken(refreshToken);
+            
+            if (!(Boolean) validation.get("valid")) {
+                return new AuthResponse(false, "Invalid refresh token", null, null, null, null);
             }
 
-            String userRole = (String) userData.get("role");
+            String tokenType = (String) validation.get("type");
+            if (!"refresh".equals(tokenType)) {
+                return new AuthResponse(false, "Invalid token type", null, null, null, null);
+            }
+
+            String userId = (String) validation.get("userId");
+            String email = (String) validation.get("email");
+            String role = (String) validation.get("role");
 
             // Generate new tokens
-            String newAccessToken = generateAccessToken(userId, email, userRole);
+            String newAccessToken = generateAccessToken(userId, email, role);
             String newRefreshToken = generateRefreshToken(userId, email);
 
             return new AuthResponse(
@@ -218,7 +237,7 @@ public class AuthService {
                 newAccessToken,
                 newRefreshToken,
                 userId,
-                userRole
+                role
             );
 
         } catch (Exception e) {
@@ -236,79 +255,29 @@ public class AuthService {
     }
 
     /**
-     * Request password reset for user
+     * Request password reset
      */
     public Map<String, Object> requestPasswordReset(String email) {
         try {
-            // Check if user exists
-            QuerySnapshot querySnapshot = firestore.collection("users")
-                .whereEqualTo("email", email)
-                .limit(1)
-                .get()
-                .get();
-
-            if (querySnapshot.isEmpty()) {
-                return Map.of(
-                    "success", false,
-                    "message", "No account found with this email address"
-                );
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            
+            if (userOpt.isEmpty()) {
+                return Map.of("success", false, "message", "User not found");
             }
 
             // In a real application, you would:
-            // 1. Generate a secure reset token
-            // 2. Store it in the database with expiration
-            // 3. Send an email with the reset link
-            // For now, we'll just return a success message
-            
-            System.out.println("Password reset requested for email: " + email);
-            
+            // 1. Generate a reset token
+            // 2. Send email with reset link
+            // 3. Store reset token in database with expiration
+
             return Map.of(
                 "success", true,
-                "message", "Password reset instructions have been sent to your email address"
+                "message", "Password reset email sent (simulated)",
+                "email", email
             );
 
         } catch (Exception e) {
-            return Map.of(
-                "success", false,
-                "message", "Password reset request failed: " + e.getMessage()
-            );
+            return Map.of("success", false, "message", "Password reset request failed: " + e.getMessage());
         }
-    }
-
-    /**
-     * Generate access token
-     */
-    private String generateAccessToken(String userId, String email, String role) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION);
-
-        return Jwts.builder()
-            .setSubject(userId)
-            .claim("userId", userId)
-            .claim("email", email)
-            .claim("role", role)
-            .claim("type", "access")
-            .setIssuedAt(now)
-            .setExpiration(expiry)
-            .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
-            .compact();
-    }
-
-    /**
-     * Generate refresh token
-     */
-    private String generateRefreshToken(String userId, String email) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION);
-
-        return Jwts.builder()
-            .setSubject(userId)
-            .claim("userId", userId)
-            .claim("email", email)
-            .claim("type", "refresh")
-            .setIssuedAt(now)
-            .setExpiration(expiry)
-            .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
-            .compact();
     }
 }

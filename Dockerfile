@@ -25,6 +25,10 @@ EXPOSE 10000
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV SERVER_PORT=10000
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:10000/api/actuator/health || exit 1
+
 # Run the application
 CMD ["java", "-jar", "target/ecobazaar-backend-1.0.0.jar"]
 

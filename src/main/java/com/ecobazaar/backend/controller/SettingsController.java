@@ -1,7 +1,6 @@
 package com.ecobazaar.backend.controller;
 
-import com.ecobazaar.backend.model.NotificationSettings;
-import com.ecobazaar.backend.model.Settings;
+import com.ecobazaar.backend.model.*;
 import com.ecobazaar.backend.service.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,40 +45,48 @@ public class SettingsController {
     }
 
     /**
-     * Update a specific setting
+     * Update user settings
      * 
      * @param userId User ID
-     * @param request Update request containing category, key, and value
+     * @param settings Settings object to update
      * @return Success or error response
      */
     @PostMapping("/{userId}/update")
-    public ResponseEntity<?> updateSetting(
+    public ResponseEntity<?> updateSettings(
             @PathVariable String userId,
-            @RequestBody Map<String, Object> request) {
+            @RequestBody Settings settings) {
         
         try {
-            String category = (String) request.get("category");
-            String key = (String) request.get("key");
-            Object value = request.get("value");
-
-            if (category == null || key == null || value == null) {
-                return ResponseEntity.badRequest()
-                    .body("Missing required fields: category, key, or value");
-            }
-
-            boolean success = settingsService.updateSetting(userId, category, key, value);
-            
-            if (success) {
-                return ResponseEntity.ok("Setting updated successfully");
-            } else {
-                return ResponseEntity.internalServerError()
-                    .body("Failed to update setting");
-            }
+            Settings updatedSettings = settingsService.updateUserSettings(userId, settings);
+            return ResponseEntity.ok(updatedSettings);
 
         } catch (Exception e) {
-            System.err.println("❌ Error updating setting: " + e.getMessage());
+            System.err.println("❌ Error updating settings: " + e.getMessage());
             return ResponseEntity.internalServerError()
-                .body("Error updating setting: " + e.getMessage());
+                .body("Error updating settings: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Update app preferences
+     * 
+     * @param userId User ID
+     * @param appPreferences App preferences object
+     * @return Success or error response
+     */
+    @PostMapping("/{userId}/app-preferences")
+    public ResponseEntity<?> updateAppPreferences(
+            @PathVariable String userId,
+            @RequestBody AppPreferences appPreferences) {
+        
+        try {
+            Settings updatedSettings = settingsService.updateAppPreferences(userId, appPreferences);
+            return ResponseEntity.ok(updatedSettings);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error updating app preferences: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                .body("Error updating app preferences: " + e.getMessage());
         }
     }
 
@@ -96,14 +103,8 @@ public class SettingsController {
             @RequestBody NotificationSettings notificationSettings) {
         
         try {
-            boolean success = settingsService.updateNotificationSettings(userId, notificationSettings);
-            
-            if (success) {
-                return ResponseEntity.ok("Notification settings updated successfully");
-            } else {
-                return ResponseEntity.internalServerError()
-                    .body("Failed to update notification settings");
-            }
+            Settings updatedSettings = settingsService.updateNotificationSettings(userId, notificationSettings);
+            return ResponseEntity.ok(updatedSettings);
 
         } catch (Exception e) {
             System.err.println("❌ Error updating notification settings: " + e.getMessage());
@@ -113,81 +114,48 @@ public class SettingsController {
     }
 
     /**
-     * Reset user settings to defaults
+     * Update privacy settings
      * 
      * @param userId User ID
+     * @param privacySettings Privacy settings object
      * @return Success or error response
      */
-    @PostMapping("/{userId}/reset")
-    public ResponseEntity<?> resetToDefaults(@PathVariable String userId) {
-        try {
-            boolean success = settingsService.resetToDefaults(userId);
-            
-            if (success) {
-                return ResponseEntity.ok("Settings reset to defaults successfully");
-            } else {
-                return ResponseEntity.internalServerError()
-                    .body("Failed to reset settings");
-            }
-
-        } catch (Exception e) {
-            System.err.println("❌ Error resetting settings: " + e.getMessage());
-            return ResponseEntity.internalServerError()
-                .body("Error resetting settings: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Export user settings
-     * 
-     * @param userId User ID
-     * @return Exported settings data or error response
-     */
-    @GetMapping("/{userId}/export")
-    public ResponseEntity<?> exportSettings(@PathVariable String userId) {
-        try {
-            Map<String, Object> exportData = settingsService.exportSettings(userId);
-            
-            if (exportData != null) {
-                return ResponseEntity.ok(exportData);
-            } else {
-                return ResponseEntity.status(404)
-                    .body("No settings found to export for user: " + userId);
-            }
-
-        } catch (Exception e) {
-            System.err.println("❌ Error exporting settings: " + e.getMessage());
-            return ResponseEntity.internalServerError()
-                .body("Error exporting settings: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Import user settings
-     * 
-     * @param userId User ID
-     * @param importData Import data map
-     * @return Success or error response
-     */
-    @PostMapping("/{userId}/import")
-    public ResponseEntity<?> importSettings(
+    @PostMapping("/{userId}/privacy")
+    public ResponseEntity<?> updatePrivacySettings(
             @PathVariable String userId,
-            @RequestBody Map<String, Object> importData) {
+            @RequestBody PrivacySettings privacySettings) {
         
         try {
-            boolean success = settingsService.importSettings(userId, importData);
-            
-            if (success) {
-                return ResponseEntity.ok("Settings imported successfully");
-            } else {
-                return ResponseEntity.badRequest()
-                    .body("Failed to import settings - check data format");
-            }
+            Settings updatedSettings = settingsService.updatePrivacySettings(userId, privacySettings);
+            return ResponseEntity.ok(updatedSettings);
 
         } catch (Exception e) {
-            System.err.println("❌ Error importing settings: " + e.getMessage());
+            System.err.println("❌ Error updating privacy settings: " + e.getMessage());
             return ResponseEntity.internalServerError()
-                .body("Error importing settings: " + e.getMessage());
+                .body("Error updating privacy settings: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Update sync settings
+     * 
+     * @param userId User ID
+     * @param syncSettings Sync settings object
+     * @return Success or error response
+     */
+    @PostMapping("/{userId}/sync")
+    public ResponseEntity<?> updateSyncSettings(
+            @PathVariable String userId,
+            @RequestBody SyncSettings syncSettings) {
+        
+        try {
+            Settings updatedSettings = settingsService.updateSyncSettings(userId, syncSettings);
+            return ResponseEntity.ok(updatedSettings);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error updating sync settings: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                .body("Error updating sync settings: " + e.getMessage());
         }
     }
 
@@ -201,6 +169,3 @@ public class SettingsController {
         return ResponseEntity.ok("✅ Settings Service is running!");
     }
 }
-
-
-

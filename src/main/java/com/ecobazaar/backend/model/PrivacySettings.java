@@ -9,51 +9,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class PrivacySettings {
 
-    @JsonProperty("locationEnabled")
-    private boolean locationEnabled;
+    @JsonProperty("privacyLevel")
+    private String privacyLevel;
 
-    @JsonProperty("dataCollectionEnabled")
-    private boolean dataCollectionEnabled;
+    @JsonProperty("dataSharing")
+    private Boolean dataSharing;
 
-    @JsonProperty("biometricEnabled")
-    private boolean biometricEnabled;
+    @JsonProperty("locationTracking")
+    private Boolean locationTracking;
 
     // Default constructor
     public PrivacySettings() {
         // Default values
-        this.locationEnabled = true;
-        this.dataCollectionEnabled = true;
-        this.biometricEnabled = false;
+        this.privacyLevel = "medium";
+        this.dataSharing = false;
+        this.locationTracking = false;
     }
 
     // Constructor with all fields
-    public PrivacySettings(boolean locationEnabled, boolean dataCollectionEnabled, boolean biometricEnabled) {
-        this.locationEnabled = locationEnabled;
-        this.dataCollectionEnabled = dataCollectionEnabled;
-        this.biometricEnabled = biometricEnabled;
+    public PrivacySettings(String privacyLevel, Boolean dataSharing, Boolean locationTracking) {
+        this.privacyLevel = privacyLevel;
+        this.dataSharing = dataSharing;
+        this.locationTracking = locationTracking;
     }
 
     // Getters and Setters
-    public boolean isLocationEnabled() { return locationEnabled; }
-    public void setLocationEnabled(boolean locationEnabled) { this.locationEnabled = locationEnabled; }
+    public String getPrivacyLevel() { return privacyLevel; }
+    public void setPrivacyLevel(String privacyLevel) { this.privacyLevel = privacyLevel; }
 
-    public boolean isDataCollectionEnabled() { return dataCollectionEnabled; }
-    public void setDataCollectionEnabled(boolean dataCollectionEnabled) { this.dataCollectionEnabled = dataCollectionEnabled; }
+    public Boolean getDataSharing() { return dataSharing; }
+    public void setDataSharing(Boolean dataSharing) { this.dataSharing = dataSharing; }
 
-    public boolean isBiometricEnabled() { return biometricEnabled; }
-    public void setBiometricEnabled(boolean biometricEnabled) { this.biometricEnabled = biometricEnabled; }
+    public Boolean getLocationTracking() { return locationTracking; }
+    public void setLocationTracking(Boolean locationTracking) { this.locationTracking = locationTracking; }
 
     @Override
     public String toString() {
         return "PrivacySettings{" +
-                "locationEnabled=" + locationEnabled +
-                ", dataCollectionEnabled=" + dataCollectionEnabled +
-                ", biometricEnabled=" + biometricEnabled +
+                "privacyLevel='" + privacyLevel + '\'' +
+                ", dataSharing=" + dataSharing +
+                ", locationTracking=" + locationTracking +
                 '}';
     }
 }
-
-
-
-
-
