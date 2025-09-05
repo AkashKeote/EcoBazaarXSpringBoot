@@ -16,7 +16,7 @@ COPY src/ src/
 RUN chmod +x mvnw
 
 # Build the application
-RUN ./mvnw clean install -DskipTests
+RUN ./mvnw clean install -DskipTests -Dspring-boot.repackage.main-class=com.ecobazaar.backend.EcoBazaarXApplication
 
 # Expose port
 EXPOSE 10000
