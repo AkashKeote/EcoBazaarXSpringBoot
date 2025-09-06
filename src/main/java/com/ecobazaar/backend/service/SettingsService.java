@@ -43,7 +43,7 @@ public class SettingsService {
                 UserSettings userSettings = userSettingsOpt.get();
                 return mapToSettings(userId, userSettings);
             }
-            
+
             // Return default settings if user doesn't exist
             return createDefaultSettings(userId);
 
