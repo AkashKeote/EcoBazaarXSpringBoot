@@ -5,10 +5,10 @@ Spring Boot Backend for EcoBazaarX E-commerce Platform
 ## 🚀 Features
 
 - **RESTful API** - Complete CRUD operations
-- **Firebase Integration** - Firestore database connectivity
-- **JWT Authentication** - Secure user authentication
+- **MySQL Database** - Production-ready database with Railway
+- **JWT Authentication** - Secure user authentication with 24-hour expiry
 - **Caching** - Performance optimization with Caffeine
-- **Database Support** - H2 (development) + PostgreSQL ready
+- **Data Migration** - Firebase to MySQL migration support
 - **Security** - Spring Security integration
 - **Monitoring** - Actuator health checks
 - **CORS Support** - Cross-origin resource sharing
@@ -19,10 +19,10 @@ Spring Boot Backend for EcoBazaarX E-commerce Platform
 - **Spring Boot 3.2.0** - Modern Spring framework
 - **Spring Security** - Authentication & authorization
 - **Spring Data JPA** - Database operations
-- **Firebase Admin SDK** - Google Cloud services
+- **MySQL 8.0** - Production database (Railway)
 - **Maven** - Build tool
-- **H2 Database** - In-memory database
 - **Caffeine Cache** - High-performance caching
+- **JWT** - JSON Web Token authentication
 
 ## 📁 Project Structure
 
@@ -33,13 +33,15 @@ src/
 │   │   └── com/ecobazaar/backend/
 │   │       ├── config/          # Configuration classes
 │   │       ├── controller/      # REST API controllers
+│   │       ├── entity/         # JPA entities
 │   │       ├── model/          # Data models
+│   │       ├── repository/     # Data repositories
 │   │       ├── service/        # Business logic
 │   │       └── EcoBazaarXApplication.java
 │   └── resources/
-│       ├── application.properties
-│       ├── application-prod.properties
-│       └── firebase-service-account.json
+│       ├── application.properties      # Development config
+│       ├── application-prod.properties # Production config
+│       └── firebase-exports/          # Sample data for migration
 ├── test/                       # Test files
 └── pom.xml                    # Maven configuration
 ```
@@ -49,16 +51,16 @@ src/
 ### Prerequisites
 - Java 17 or higher
 - Maven 3.6+
-- Firebase project with service account
+- MySQL database (local or Railway)
 
 ### Local Development
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_USERNAME/ecobazaar-backend.git
-cd ecobazaar-backend
+git clone https://github.com/AkashKeote/EcoBazaarXSpringBoot.git
+cd EcoBazaarX-Backend
 
-# Add Firebase service account
-# Place firebase-service-account.json in src/main/resources/
+# Configure database in application.properties
+# Update MySQL connection details
 
 # Run application
 mvn spring-boot:run
@@ -67,13 +69,20 @@ mvn spring-boot:run
 ### Production Deployment
 ```bash
 # Build JAR
-mvn clean install
+mvn clean package -DskipTests
 
 # Run JAR
 java -jar target/ecobazaar-backend-1.0.0.jar
 ```
 
 ## 🌐 API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/validate` - Validate JWT token
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/refresh` - Refresh JWT token
 
 ### Settings Management
 - `GET /api/settings/{userId}` - Get user settings
@@ -84,6 +93,11 @@ java -jar target/ecobazaar-backend-1.0.0.jar
 - `POST /api/settings/{userId}/import` - Import settings
 - `GET /api/settings/health` - Health check
 
+### Data Migration
+- `POST /api/migration/run` - Run data migration from Firebase exports
+- `GET /api/migration/status` - Get migration status
+- `POST /api/migration/reset` - Reset migration data
+
 ### Health & Monitoring
 - `GET /api/actuator/health` - System health
 - `GET /api/actuator/info` - Application info
@@ -92,39 +106,41 @@ java -jar target/ecobazaar-backend-1.0.0.jar
 ## 🔧 Configuration
 
 ### Environment Variables
-- `FIREBASE_PROJECT_ID` - Firebase project ID
-- `FIREBASE_CREDENTIALS_PATH` - Service account path
+- `DATABASE_URL` - MySQL database URL (Railway)
+- `DB_USERNAME` - Database username
+- `DB_PASSWORD` - Database password
 - `SERVER_PORT` - Application port (default: 8080)
 - `JWT_SECRET` - JWT signing secret
-- `DB_PASSWORD` - Database password
+- `CORS_ORIGINS` - Allowed CORS origins
+
+### Database Configuration
+- **Development**: Local MySQL (localhost:3306)
+- **Production**: Railway MySQL (mysql-production-59d9.up.railway.app:3306)
 
 ### Profiles
-- **default** - Development configuration
-- **production** - Production configuration
+- **default** - Development configuration (local MySQL)
+- **prod** - Production configuration (Railway MySQL)
 
 ## 🚀 Deployment
 
-### Render (Recommended)
-1. Connect GitHub repository to Render
-2. Select **Docker** environment (not Java)
-3. Configure environment variables:
-   - `FIREBASE_PROJECT_ID`: Your Firebase project ID
-   - `FIREBASE_CREDENTIALS_JSON`: Your complete Firebase service account JSON as a string
-   - `JWT_SECRET`: Your JWT secret key
-   - `DB_PASSWORD`: Database password
-   - `CORS_ORIGINS`: Allowed CORS origins
-4. Deploy automatically
+### Render (Current Production)
+- **URL**: https://ecobazaarxspringboot-1.onrender.com
+- **Status**: ✅ Live and running
+- **Database**: Railway MySQL connected
+- **Environment**: Production profile active
 
-**Note**: Using Docker environment on Render provides better compatibility and control.
+### Railway Database
+- **Host**: mysql-production-59d9.up.railway.app
+- **Port**: 3306
+- **Database**: railway
+- **Status**: ✅ Connected and working
 
-### Local Deployment
-```bash
-# Windows
-deploy.bat
-
-# Linux/Mac
-./deploy.sh
-```
+### Environment Variables (Production)
+- `DATABASE_URL`: jdbc:mysql://mysql-production-59d9.up.railway.app:3306/railway
+- `DB_USERNAME`: root
+- `DB_PASSWORD`: cOkdTzTVvUIwNKaGinyHGFGipGhBqYWr
+- `JWT_SECRET`: ecobazaarX2024SecretKeyForJWTTokenGeneration
+- `CORS_ORIGINS`: https://ecobazaar.vercel.app,https://ecobazaar.netlify.app
 
 ### Docker Deployment
 ```bash
@@ -135,12 +151,6 @@ docker build -t ecobazaar-backend .
 docker run -p 10000:10000 ecobazaar-backend
 ```
 
-### Other Platforms
-- **Heroku** - Easy deployment
-- **AWS** - Scalable infrastructure
-- **Google Cloud** - Firebase integration
-- **DigitalOcean** - Simple deployment
-
 ## 🔒 Security
 
 - JWT-based authentication
@@ -148,6 +158,49 @@ docker run -p 10000:10000 ecobazaar-backend
 - Input validation
 - Secure headers
 - Rate limiting ready
+
+## 📱 Frontend Integration Guide
+
+### For Frontend Developers
+**IMPORTANT**: This backend uses **MySQL database**, NOT Firebase Firestore.
+
+### API Base URL
+```
+Production: https://ecobazaarxspringboot-1.onrender.com/api
+```
+
+### Authentication Flow
+1. **Register**: `POST /api/auth/register`
+2. **Login**: `POST /api/auth/login` → Returns JWT token
+3. **Use Token**: Include in Authorization header: `Bearer <token>`
+4. **Validate**: `POST /api/auth/validate` → Check token validity
+
+### Sample API Calls
+```javascript
+// Login
+const response = await fetch('https://ecobazaarxspringboot-1.onrender.com/api/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password123',
+    role: 'customer'
+  })
+});
+
+// Use token for authenticated requests
+const token = response.data.token;
+const authResponse = await fetch('https://ecobazaarxspringboot-1.onrender.com/api/settings/1', {
+  headers: { 'Authorization': `Bearer ${token}` }
+});
+```
+
+### Database Entities
+- **Users** - User accounts and authentication
+- **Products** - Product catalog
+- **Orders** - Order management
+- **Wishlists** - User wishlists
+- **Settings** - User preferences
 
 ## 📊 Performance
 
@@ -176,15 +229,28 @@ For support and questions:
 - Contact the development team
 - Check documentation
 
-## 🎯 Roadmap
+## 🎯 Current Status
 
-- [ ] User management API
-- [ ] Product catalog API
-- [ ] Order management API
-- [ ] Payment integration
-- [ ] Real-time notifications
-- [ ] Analytics dashboard
+### ✅ Completed Features
+- [x] **User Authentication** - JWT-based login/register
+- [x] **Database Migration** - Firebase to MySQL migration
+- [x] **Settings Management** - User preferences and settings
+- [x] **Production Deployment** - Live on Render + Railway
+- [x] **API Documentation** - Complete endpoint documentation
+- [x] **Security** - JWT authentication with 24-hour expiry
+- [x] **CORS Support** - Frontend integration ready
+
+### 🔄 In Progress
+- [ ] **Product Catalog API** - Product management endpoints
+- [ ] **Order Management API** - Order processing system
+- [ ] **Payment Integration** - Payment gateway integration
+
+### 📋 Future Roadmap
+- [ ] **Real-time Notifications** - WebSocket support
+- [ ] **Analytics Dashboard** - User analytics and reporting
+- [ ] **File Upload** - Image and document upload
+- [ ] **Email Service** - Email notifications and verification
 
 ---
 
-**Built with ❤️ by EcoBazaarX Team**
+**Built with ❤️ by Akash**
