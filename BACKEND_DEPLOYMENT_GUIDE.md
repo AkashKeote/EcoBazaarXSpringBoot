@@ -82,7 +82,7 @@ INFO - Tomcat started on port(s): 10000 (http)
 
 ### 2. Test Health Endpoint
 ```
-GET https://your-backend-url.onrender.com/api/health
+GET https://ecobazaarxspringboot-1.onrender.com/api/health
 ```
 
 Expected response:

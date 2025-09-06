@@ -1,0 +1,38 @@
+# Render deployment configuration for EcoBazaarX Backend with PostgreSQL
+# This configuration uses Render's managed PostgreSQL database
+
+databases:
+  - name: ecobazaardb
+    databaseName: ecobazaar_db
+    user: ecobazaar_user
+    plan: free
+
+services:
+  - type: web
+    name: ecobazaar-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SERVER_PORT
+        value: 10000
+      - key: JWT_SECRET
+        value: ecobazaarX2024SecretKeyForJWTTokenGenerationProduction
+      - key: CORS_ORIGINS
+        value: https://ecobazzarx.web.app/
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecobazaardb
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: ecobazaardb
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: ecobazaardb
+          property: password
+    healthCheckPath: /api/health
+    port: 10000
