@@ -2,6 +2,7 @@ package com.ecobazaar.backend.controller;
 
 import com.ecobazaar.backend.entity.Store;
 import com.ecobazaar.backend.repository.StoreRepository;
+import com.ecobazaar.backend.service.DataInitializationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,19 @@ public class StoreController {
 
     @Autowired
     private StoreRepository storeRepository;
+    
+    @Autowired
+    private DataInitializationService dataInitializationService;
 
     // Get all stores
     @GetMapping
     public ResponseEntity<List<Store>> getAllStores() {
         try {
+            // Auto-initialize data if database is empty
+            if (dataInitializationService.needsInitialization()) {
+                dataInitializationService.initializeSampleData();
+            }
+            
             List<Store> stores = storeRepository.findAll();
             return ResponseEntity.ok(stores);
         } catch (Exception e) {

@@ -35,6 +35,7 @@ com\ecobazaar\backend\entity\Order.class
 com\ecobazaar\backend\model\AuthResponse.class
 com\ecobazaar\backend\model\SyncSettings.class
 com\ecobazaar\backend\entity\UserOrder.class
+com\ecobazaar\backend\service\DataInitializationService.class
 com\ecobazaar\backend\repository\OrderRepository.class
 com\ecobazaar\backend\model\Settings.class
 com\ecobazaar\backend\model\UserRegistration.class
@@ -50,3 +51,4 @@ com\ecobazaar\backend\model\AuthRequest.class
 com\ecobazaar\backend\controller\CorsController.class
 com\ecobazaar\backend\MigrationRunner.class
 com\ecobazaar\backend\service\SettingsService.class
+com\ecobazaar\backend\controller\DataInitializationController.class
