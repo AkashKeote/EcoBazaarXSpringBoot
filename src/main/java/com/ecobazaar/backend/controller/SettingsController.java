@@ -16,7 +16,16 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/settings")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173", "https://akashkeote.github.io"})
+@CrossOrigin(origins = {
+    "http://localhost:3000", 
+    "http://localhost:5173", 
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "https://ecobazaar.vercel.app",
+    "https://ecobazzarx.web.app", 
+    "https://ecobazzarx.firebaseapp.com",
+    "https://akashkeote.github.io"
+})
 public class SettingsController {
 
     @Autowired
@@ -30,6 +39,28 @@ public class SettingsController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserSettings(@PathVariable String userId) {
+        try {
+            Settings settings = settingsService.getUserSettings(userId);
+            if (settings != null) {
+                return ResponseEntity.ok(settings);
+            } else {
+                return ResponseEntity.status(404).body("Settings not found for user: " + userId);
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Error getting settings: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                .body("Error retrieving settings: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Get user settings (alternative endpoint for frontend compatibility)
+     * 
+     * @param userId User ID
+     * @return User settings or error response
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserSettingsAlt(@PathVariable String userId) {
         try {
             Settings settings = settingsService.getUserSettings(userId);
             if (settings != null) {
