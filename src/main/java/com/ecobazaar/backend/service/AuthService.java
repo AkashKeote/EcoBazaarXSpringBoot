@@ -189,6 +189,17 @@ public class AuthService {
                     .parseSignedClaims(token)
                     .getPayload();
 
+            // Check if token is expired
+            Date expiration = claims.getExpiration();
+            Date now = new Date();
+            
+            if (expiration.before(now)) {
+                Map<String, Object> result = new HashMap<>();
+                result.put("valid", false);
+                result.put("error", "JWT expired " + (now.getTime() - expiration.getTime()) + " milliseconds ago at " + expiration.toInstant() + ". Current time: " + now.toInstant() + ". Allowed clock skew: 0 milliseconds.");
+                return result;
+            }
+
             Map<String, Object> result = new HashMap<>();
             result.put("valid", true);
             result.put("userId", claims.get("userId"));
