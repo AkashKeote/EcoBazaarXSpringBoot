@@ -16,6 +16,7 @@ com\ecobazaar\backend\EcoBazaarXApplication.class
 com\ecobazaar\backend\entity\Wishlist.class
 com\ecobazaar\backend\config\WebConfig.class
 com\ecobazaar\backend\controller\MigrationController.class
+com\ecobazaar\backend\controller\EcoChallengeController.class
 com\ecobazaar\backend\entity\Product.class
 com\ecobazaar\backend\model\AppSettings.class
 com\ecobazaar\backend\repository\StoreRepository.class
