@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,16 +40,23 @@ public class SettingsService {
             
             if (userSettingsOpt.isPresent()) {
                 UserSettings userSettings = userSettingsOpt.get();
+                System.out.println("Found existing settings for user " + userId);
                 return mapToSettings(userId, userSettings);
             }
 
-            // Return default settings if user doesn't exist
-            return createDefaultSettings(userId);
+            // User doesn't have settings, create default settings in database
+            System.out.println("No settings found for user " + userId + ", creating default settings");
+            UserSettings defaultUserSettings = new UserSettings(userId);
+            defaultUserSettings = userSettingsRepository.save(defaultUserSettings);
+            return mapToSettings(userId, defaultUserSettings);
 
         } catch (Exception e) {
             System.err.println("Error getting user settings: " + e.getMessage());
             e.printStackTrace();
-            return null;
+            
+            // If database operation fails, return default settings without saving
+            System.out.println("Database error, returning default settings without saving for user " + userId);
+            return createDefaultSettings(userId);
         }
     }
 
@@ -352,6 +358,7 @@ public class SettingsService {
             Optional<UserSettings> existingSettings = userSettingsRepository.findByUserId(userId);
             if (existingSettings.isPresent()) {
                 // User already has settings, return them
+                System.out.println("User " + userId + " already has settings, returning existing settings");
                 return mapToSettings(userId, existingSettings.get());
             }
             
@@ -384,15 +391,42 @@ public class SettingsService {
                 userSettings.setEcoTipsEnabled((Boolean) settingsMap.get("priceAlerts"));
             }
             
-            // Save the initialized settings
-            userSettings = userSettingsRepository.save(userSettings);
-            
-            return mapToSettings(userId, userSettings);
+            // Try to save the initialized settings
+            try {
+                userSettings = userSettingsRepository.save(userSettings);
+                System.out.println("Successfully initialized settings for user " + userId);
+                return mapToSettings(userId, userSettings);
+            } catch (Exception saveException) {
+                // If save fails due to duplicate entry, try to fetch existing settings
+                if (saveException.getMessage().contains("Duplicate entry") || 
+                    saveException.getMessage().contains("UK_4bos7satl9xeqd18frfeqg6tt")) {
+                    System.out.println("Duplicate entry detected for user " + userId + ", fetching existing settings");
+                    Optional<UserSettings> existingSettingsRetry = userSettingsRepository.findByUserId(userId);
+                    if (existingSettingsRetry.isPresent()) {
+                        return mapToSettings(userId, existingSettingsRetry.get());
+                    }
+                }
+                throw saveException;
+            }
             
         } catch (Exception e) {
             System.err.println("Error initializing user settings: " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Failed to initialize user settings", e);
+            
+            // If initialization fails, try to return existing settings or default settings
+            try {
+                Optional<UserSettings> fallbackSettings = userSettingsRepository.findByUserId(userId);
+                if (fallbackSettings.isPresent()) {
+                    System.out.println("Returning existing settings as fallback for user " + userId);
+                    return mapToSettings(userId, fallbackSettings.get());
+                } else {
+                    System.out.println("Returning default settings as fallback for user " + userId);
+                    return createDefaultSettings(userId);
+                }
+            } catch (Exception fallbackException) {
+                System.err.println("Fallback also failed: " + fallbackException.getMessage());
+                throw new RuntimeException("Failed to initialize user settings", e);
+            }
         }
     }
 
