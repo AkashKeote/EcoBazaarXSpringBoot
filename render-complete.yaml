@@ -1,3 +1,12 @@
+# Complete Render deployment configuration for EcoBazaarX Backend
+# This file deploys both the MySQL database and Spring Boot backend
+
+databases:
+  - name: ecobazaardb
+    databaseName: ecobazaar_db
+    user: ecobazaar_user
+    plan: free
+
 services:
   - type: web
     name: ecobazaar-backend
