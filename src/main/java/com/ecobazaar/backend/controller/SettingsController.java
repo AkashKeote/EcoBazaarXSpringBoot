@@ -53,27 +53,6 @@ public class SettingsController {
         }
     }
 
-    /**
-     * Get user settings (alternative endpoint for frontend compatibility)
-     * 
-     * @param userId User ID
-     * @return User settings or error response
-     */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getUserSettingsAlt(@PathVariable String userId) {
-        try {
-            Settings settings = settingsService.getUserSettings(userId);
-            if (settings != null) {
-                return ResponseEntity.ok(settings);
-            } else {
-                return ResponseEntity.status(404).body("Settings not found for user: " + userId);
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Error getting settings: " + e.getMessage());
-            return ResponseEntity.internalServerError()
-                .body("Error retrieving settings: " + e.getMessage());
-        }
-    }
 
     /**
      * Update user settings
@@ -197,7 +176,7 @@ public class SettingsController {
      * @param settings Default settings to initialize
      * @return Success or error response
      */
-    @PostMapping("/user/{userId}/initialize")
+    @PostMapping("/{userId}/initialize")
     public ResponseEntity<?> initializeUserSettings(
             @PathVariable String userId,
             @RequestBody Map<String, Object> settings) {
