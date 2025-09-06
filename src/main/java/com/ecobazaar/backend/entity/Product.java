@@ -34,6 +34,9 @@ public class Product {
     @Column
     private String color;
     
+    @Column(name = "image_url")
+    private String imageUrl;
+    
     @Column(name = "store_id")
     private String storeId;
     
@@ -66,6 +69,15 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
         this.category = category;
+    }
+    
+    public Product(String name, String description, Double price, Integer quantity, String category, String imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+        this.imageUrl = imageUrl;
     }
     
     // Getters and Setters
@@ -131,6 +143,14 @@ public class Product {
     
     public void setColor(String color) {
         this.color = color;
+    }
+    
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
     
     public String getStoreId() {

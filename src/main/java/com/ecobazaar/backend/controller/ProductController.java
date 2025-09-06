@@ -154,6 +154,7 @@ public class ProductController {
                 product.setPrice(productDetails.getPrice());
                 product.setQuantity(productDetails.getQuantity());
                 product.setCategory(productDetails.getCategory());
+                product.setImageUrl(productDetails.getImageUrl());
                 product.setStoreId(productDetails.getStoreId());
                 product.setStoreName(productDetails.getStoreName());
                 
