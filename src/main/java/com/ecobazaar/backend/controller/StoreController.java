@@ -59,7 +59,7 @@ public class StoreController {
     @GetMapping("/search")
     public ResponseEntity<List<Store>> searchStores(@RequestParam String query) {
         try {
-            List<Store> stores = storeRepository.findByNameContainingIgnoreCase(query);
+            List<Store> stores = storeRepository.findByStoreNameContainingIgnoreCase(query);
             return ResponseEntity.ok(stores);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(List.of());
