@@ -42,6 +42,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:*",
             "http://127.0.0.1:*",
+            "https://ecobazaar.vercel.app",
             "https://ecobazzarx.web.app",
             "https://ecobazzarx.firebaseapp.com",
             "https://akashkeote.github.io"
