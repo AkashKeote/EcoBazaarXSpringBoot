@@ -218,9 +218,6 @@ const authResponse = await fetch('https://ecobazaarxspringboot-1.onrender.com/ap
 4. Push to branch
 5. Create Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License.
 
 ## 🆘 Support
 
