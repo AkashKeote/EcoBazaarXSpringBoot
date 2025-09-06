@@ -48,41 +48,18 @@ public class AuthController {
             System.out.println("Authentication result: " + response.isSuccess() + " - " + response.getMessage());
             
             if (response.isSuccess()) {
-                return ResponseEntity.ok()
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-                    .header("Access-Control-Allow-Headers", "*")
-                    .body(response);
+                return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.badRequest()
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-                    .header("Access-Control-Allow-Headers", "*")
-                    .body(response);
+                return ResponseEntity.badRequest().body(response);
             }
         } catch (Exception e) {
             System.err.println("Login error: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.badRequest()
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-                .header("Access-Control-Allow-Headers", "*")
                 .body(new AuthResponse(false, "Login failed: " + e.getMessage(), null, null, null, null));
         }
     }
 
-    /**
-     * Handle preflight OPTIONS requests for CORS
-     */
-    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleOptions() {
-        return ResponseEntity.ok()
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-            .header("Access-Control-Allow-Headers", "*")
-            .header("Access-Control-Max-Age", "3600")
-            .build();
-    }
 
     /**
      * User registration endpoint
