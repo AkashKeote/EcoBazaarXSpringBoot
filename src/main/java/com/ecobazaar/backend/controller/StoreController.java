@@ -79,6 +79,38 @@ public class StoreController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> addStore(@RequestBody Store store) {
         try {
+            // Validate required fields
+            if (store.getStoreName() == null || store.getStoreName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Store name is required"
+                ));
+            }
+            
+            if (store.getOwnerId() == null || store.getOwnerId().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Owner ID is required"
+                ));
+            }
+            
+            // Set default values if not provided
+            if (store.getDescription() == null) {
+                store.setDescription("");
+            }
+            
+            if (store.getOwnerEmail() == null) {
+                store.setOwnerEmail("");
+            }
+            
+            if (store.getContactPhone() == null) {
+                store.setContactPhone("");
+            }
+            
+            if (store.getAddress() == null) {
+                store.setAddress("");
+            }
+            
             Store savedStore = storeRepository.save(store);
             return ResponseEntity.ok(Map.of(
                 "success", true,
@@ -86,6 +118,7 @@ public class StoreController {
                 "store", savedStore
             ));
         } catch (Exception e) {
+            System.err.println("Error adding store: " + e.getMessage());
             return ResponseEntity.internalServerError().body(Map.of(
                 "success", false,
                 "message", "Error adding store: " + e.getMessage()

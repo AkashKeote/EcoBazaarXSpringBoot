@@ -90,6 +90,41 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> addProduct(@RequestBody Product product) {
         try {
+            // Validate required fields
+            if (product.getName() == null || product.getName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Product name is required"
+                ));
+            }
+            
+            if (product.getPrice() == null || product.getPrice() <= 0) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Valid price is required"
+                ));
+            }
+            
+            if (product.getStoreId() == null || product.getStoreId().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Store ID is required"
+                ));
+            }
+            
+            // Set default values if not provided
+            if (product.getQuantity() == null) {
+                product.setQuantity(0);
+            }
+            
+            if (product.getCategory() == null || product.getCategory().trim().isEmpty()) {
+                product.setCategory("General");
+            }
+            
+            if (product.getImageUrl() == null) {
+                product.setImageUrl("");
+            }
+            
             Product savedProduct = productRepository.save(product);
             return ResponseEntity.ok(Map.of(
                 "success", true,
@@ -97,6 +132,7 @@ public class ProductController {
                 "product", savedProduct
             ));
         } catch (Exception e) {
+            System.err.println("Error adding product: " + e.getMessage());
             return ResponseEntity.internalServerError().body(Map.of(
                 "success", false,
                 "message", "Error adding product: " + e.getMessage()
