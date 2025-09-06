@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/stores")
+@RequestMapping("/stores")
 @CrossOrigin(origins = "*")
 public class StoreController {
 

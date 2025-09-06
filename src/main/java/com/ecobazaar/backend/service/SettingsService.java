@@ -339,6 +339,64 @@ public class SettingsService {
     }
 
     /**
+     * Initialize user settings for new users
+     * 
+     * @param userId User ID
+     * @param settingsMap Map of settings to initialize
+     * @return Initialized Settings object
+     */
+    @CacheEvict(value = "settings", key = "#userId")
+    public Settings initializeUserSettings(String userId, Map<String, Object> settingsMap) {
+        try {
+            // Check if user already has settings
+            Optional<UserSettings> existingSettings = userSettingsRepository.findByUserId(userId);
+            if (existingSettings.isPresent()) {
+                // User already has settings, return them
+                return mapToSettings(userId, existingSettings.get());
+            }
+            
+            // Create new user settings with provided values
+            UserSettings userSettings = new UserSettings(userId);
+            
+            // Set default values from the provided map
+            if (settingsMap.containsKey("notifications")) {
+                userSettings.setNotificationsEnabled((Boolean) settingsMap.get("notifications"));
+            }
+            if (settingsMap.containsKey("darkMode")) {
+                userSettings.setTheme((Boolean) settingsMap.get("darkMode") ? "dark" : "light");
+            }
+            if (settingsMap.containsKey("language")) {
+                userSettings.setLanguage((String) settingsMap.get("language"));
+            }
+            if (settingsMap.containsKey("pushNotifications")) {
+                userSettings.setPushNotifications((Boolean) settingsMap.get("pushNotifications"));
+            }
+            if (settingsMap.containsKey("emailNotifications")) {
+                userSettings.setEmailNotifications((Boolean) settingsMap.get("emailNotifications"));
+            }
+            if (settingsMap.containsKey("orderUpdates")) {
+                userSettings.setOrderUpdates((Boolean) settingsMap.get("orderUpdates"));
+            }
+            if (settingsMap.containsKey("promotionalOffers")) {
+                userSettings.setPromotionalEmails((Boolean) settingsMap.get("promotionalOffers"));
+            }
+            if (settingsMap.containsKey("priceAlerts")) {
+                userSettings.setEcoTipsEnabled((Boolean) settingsMap.get("priceAlerts"));
+            }
+            
+            // Save the initialized settings
+            userSettings = userSettingsRepository.save(userSettings);
+            
+            return mapToSettings(userId, userSettings);
+            
+        } catch (Exception e) {
+            System.err.println("Error initializing user settings: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize user settings", e);
+        }
+    }
+
+    /**
      * Create default settings for a new user
      */
     private Settings createDefaultSettings(String userId) {

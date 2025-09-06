@@ -160,6 +160,29 @@ public class SettingsController {
     }
 
     /**
+     * Initialize user settings for new users
+     * 
+     * @param userId User ID
+     * @param settings Default settings to initialize
+     * @return Success or error response
+     */
+    @PostMapping("/user/{userId}/initialize")
+    public ResponseEntity<?> initializeUserSettings(
+            @PathVariable String userId,
+            @RequestBody Map<String, Object> settings) {
+        
+        try {
+            Settings initializedSettings = settingsService.initializeUserSettings(userId, settings);
+            return ResponseEntity.ok(initializedSettings);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error initializing user settings: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                .body("Error initializing user settings: " + e.getMessage());
+        }
+    }
+
+    /**
      * Health check endpoint
      * 
      * @return Health status
