@@ -303,3 +303,4 @@ public class DataInitializationService {
         return productRepository.count() == 0 && storeRepository.count() == 0;
     }
 }
+
