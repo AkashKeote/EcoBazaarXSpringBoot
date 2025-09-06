@@ -1,5 +1,0 @@
-databases:
-  - name: ecobazaardb
-    databaseName: ecobazaar_db
-    user: ecobazaar_user
-    plan: free
