@@ -14,16 +14,10 @@ services:
       - key: CORS_ORIGINS
         value: https://ecobazzarx.web.app/
       - key: DATABASE_URL
-        fromDatabase:
-          name: ecobazaardb
-          property: connectionString
+        value: jdbc:mysql://ecobazaardb.onrender.com:3306/ecobazaar_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&connectTimeout=60000&socketTimeout=60000
       - key: DB_USERNAME
-        fromDatabase:
-          name: ecobazaardb
-          property: user
+        value: ecobazaar_user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: ecobazaardb
-          property: password
+        value: ecobazaar_password
     healthCheckPath: /api/health
     port: 10000

@@ -47,7 +47,7 @@ render deploy --config render-backend-fixed.yaml
 ## 🔧 Connection Configuration
 
 ### Database Connection Details
-- **Host**: `ecobazaardb.onrender.com`
+- **Host**: `ecobazaardb.onrender.com` (external hostname for separate services)
 - **Port**: `3306`
 - **Database**: `ecobazaar_db`
 - **Username**: `ecobazaar_user`
@@ -57,6 +57,9 @@ render deploy --config render-backend-fixed.yaml
 ```
 jdbc:mysql://ecobazaardb.onrender.com:3306/ecobazaar_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&connectTimeout=60000&socketTimeout=60000
 ```
+
+### ⚠️ Important: Hostname Resolution Fix
+**For separate services on Render, always use the external hostname (`ecobazaardb.onrender.com`) instead of internal hostname (`ecobazaardb`) to avoid "UnknownHostException" errors.**
 
 ## 📊 Expected Results
 
@@ -107,9 +110,11 @@ INFO - Hibernate: connection released
 4. **Database Service**: Ensure database is running and accessible
 
 ### Common Issues:
+- **UnknownHostException**: Use external hostname (`ecobazaardb.onrender.com`) instead of internal (`ecobazaardb`)
 - **Connection timeout**: Increase `connectTimeout` and `socketTimeout`
 - **Authentication failed**: Verify username/password
 - **Database not found**: Check database name and initialization
+- **Hostname resolution**: Ensure using external hostname for separate services
 
 ## 📝 Next Steps After Deployment
 
