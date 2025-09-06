@@ -15,6 +15,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findByIsVerifiedTrue();
     List<Store> findByCity(String city);
     List<Store> findByState(String state);
+    List<Store> findByNameContainingIgnoreCase(String name);
     boolean existsByStoreId(String storeId);
     boolean existsByOwnerId(String ownerId);
 }
