@@ -1,9 +1,9 @@
 com\ecobazaar\backend\entity\OrderStatus.class
+com\ecobazaar\backend\controller\ProductController.class
 com\ecobazaar\backend\entity\WishlistItem.class
-main\java\com\ecobazaar\backend\controller\ProductController.class
 com\ecobazaar\backend\repository\WishlistRepository.class
-main\java\com\ecobazaar\backend\controller\StoreController.class
 com\ecobazaar\backend\entity\EcoChallenge.class
+com\ecobazaar\backend\controller\StoreController.class
 com\ecobazaar\backend\repository\CartRepository.class
 com\ecobazaar\backend\repository\EcoChallengeRepository.class
 com\ecobazaar\backend\repository\UserOrderRepository.class
