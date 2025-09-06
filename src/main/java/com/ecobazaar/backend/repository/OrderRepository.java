@@ -16,10 +16,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByOrderId(String orderId);
     List<Order> findByUserId(String userId);
     List<Order> findByOrderStatus(OrderStatus status);
-    List<Order> findByStatus(OrderStatus status);
     List<Order> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
     List<Order> findByUserEmail(String userEmail);
-    long countByStatus(OrderStatus status);
+    long countByOrderStatus(OrderStatus status);
     
     @Query("SELECT o FROM Order o WHERE o.createdAt >= :startDate AND o.createdAt <= :endDate")
     List<Order> findOrdersByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);

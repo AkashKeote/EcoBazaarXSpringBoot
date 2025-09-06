@@ -60,7 +60,7 @@ public class OrderController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable OrderStatus status) {
         try {
-            List<Order> orders = orderRepository.findByStatus(status);
+            List<Order> orders = orderRepository.findByOrderStatus(status);
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(List.of());
@@ -178,9 +178,9 @@ public class OrderController {
     public ResponseEntity<Map<String, Object>> getOrderStats() {
         try {
             long totalOrders = orderRepository.count();
-            long pendingOrders = orderRepository.countByStatus(OrderStatus.PENDING);
-            long completedOrders = orderRepository.countByStatus(OrderStatus.COMPLETED);
-            long cancelledOrders = orderRepository.countByStatus(OrderStatus.CANCELLED);
+            long pendingOrders = orderRepository.countByOrderStatus(OrderStatus.PENDING);
+            long completedOrders = orderRepository.countByOrderStatus(OrderStatus.COMPLETED);
+            long cancelledOrders = orderRepository.countByOrderStatus(OrderStatus.CANCELLED);
             
             return ResponseEntity.ok(Map.of(
                 "totalOrders", totalOrders,
