@@ -40,8 +40,6 @@ public class DataMigrationService {
     @Autowired
     private CartRepository cartRepository;
     
-    @Autowired
-    private EcoChallengeRepository ecoChallengeRepository;
     
     @Autowired
     private PaymentTransactionRepository paymentTransactionRepository;
@@ -136,23 +134,6 @@ public class DataMigrationService {
         return cartRepository.save(cart);
     }
 
-    /**
-     * Migrate eco challenge data from Firestore to MySQL
-     */
-    public EcoChallenge migrateEcoChallenge(String firestoreChallengeId, String title, String description, 
-                                          String category, String difficulty, Integer ecoPoints, Double carbonSavings) {
-        EcoChallenge challenge = new EcoChallenge();
-        challenge.setChallengeId(firestoreChallengeId != null && !firestoreChallengeId.isEmpty() ? firestoreChallengeId : UUID.randomUUID().toString());
-        challenge.setTitle(title);
-        challenge.setDescription(description);
-        challenge.setCategory(category);
-        challenge.setDifficulty(difficulty);
-        challenge.setEcoPoints(ecoPoints);
-        challenge.setCarbonSavings(carbonSavings);
-        challenge.setIsActive(true);
-        
-        return ecoChallengeRepository.save(challenge);
-    }
 
     /**
      * Migrate store data from Firestore to MySQL
@@ -259,8 +240,6 @@ public class DataMigrationService {
             // Migrate carts
             result.append(migrateCartsFromFile(objectMapper, exportsDir));
             
-            // Migrate eco challenges
-            result.append(migrateEcoChallengesFromFile(objectMapper, exportsDir));
             
             // Migrate payment transactions
             result.append(migratePaymentTransactionsFromFile(objectMapper, exportsDir));
@@ -482,41 +461,6 @@ public class DataMigrationService {
         }
     }
     
-    private String migrateEcoChallengesFromFile(ObjectMapper objectMapper, File exportsDir) {
-        try {
-            File challengesFile = new File(exportsDir, "eco_challenges.json");
-            if (!challengesFile.exists()) {
-                return "Eco challenges file not found, skipping...\n";
-            }
-            
-            List<Map<String, Object>> challenges = objectMapper.readValue(challengesFile, List.class);
-            int migrated = 0;
-            
-            for (Map<String, Object> challengeData : challenges) {
-                try {
-                    String title = (String) challengeData.get("title");
-                    String description = (String) challengeData.get("description");
-                    String category = (String) challengeData.get("category");
-                    String difficulty = (String) challengeData.get("difficulty");
-                    Integer ecoPoints = challengeData.get("ecoPoints") != null ? Integer.valueOf(challengeData.get("ecoPoints").toString()) : 0;
-                    Double carbonSavings = challengeData.get("carbonSavings") != null ? Double.valueOf(challengeData.get("carbonSavings").toString()) : 0.0;
-                    
-                    if (title != null) {
-                        migrateEcoChallenge("", title, description != null ? description : "", 
-                                          category != null ? category : "", difficulty != null ? difficulty : "", 
-                                          ecoPoints, carbonSavings);
-                        migrated++;
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error migrating eco challenge: " + e.getMessage());
-                }
-            }
-            
-            return String.format("Migrated %d eco challenges\n", migrated);
-        } catch (Exception e) {
-            return "Error migrating eco challenges: " + e.getMessage() + "\n";
-        }
-    }
     
     private String migratePaymentTransactionsFromFile(ObjectMapper objectMapper, File exportsDir) {
         try {
@@ -634,7 +578,6 @@ public class DataMigrationService {
             "Wishlists: %d\n" +
             "Wishlist Items: %d\n" +
             "Carts: %d\n" +
-            "Eco Challenges: %d\n" +
             "Stores: %d\n" +
             "Payment Transactions: %d\n" +
             "User Orders: %d\n" +
@@ -645,7 +588,6 @@ public class DataMigrationService {
             wishlistRepository.count(),
             wishlistItemRepository.count(),
             cartRepository.count(),
-            ecoChallengeRepository.count(),
             storeRepository.count(),
             paymentTransactionRepository.count(),
             userOrderRepository.count(),
