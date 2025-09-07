@@ -1,110 +1,108 @@
-# Test Eco Challenge API Endpoints
-$baseUrl = "https://ecobazaarxspringboot-1.onrender.com"
+# Test script for Eco Challenge API endpoints
+# Make sure the backend is running on port 10000
 
-Write-Host "🧪 Testing Eco Challenge API Endpoints..." -ForegroundColor Green
+$baseUrl = "http://localhost:10000/api/eco-challenges"
+
+Write-Host "Testing Eco Challenge API Endpoints..." -ForegroundColor Green
 Write-Host "Base URL: $baseUrl" -ForegroundColor Yellow
 Write-Host ""
 
-# Test 1: Get all eco challenges
-Write-Host "1️⃣ Testing GET /api/eco-challenges" -ForegroundColor Cyan
+# Test 1: Get all challenges
+Write-Host "1. Testing GET /api/eco-challenges" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges" -Method GET
-    Write-Host "✅ Success: Found $($response.Count) eco challenges" -ForegroundColor Green
+    $response = Invoke-RestMethod -Uri "$baseUrl" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) challenges" -ForegroundColor Green
     if ($response.Count -gt 0) {
         Write-Host "   First challenge: $($response[0].title)" -ForegroundColor Gray
     }
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-# Test 2: Get active eco challenges
-Write-Host "2️⃣ Testing GET /api/eco-challenges/active" -ForegroundColor Cyan
+# Test 2: Get active challenges
+Write-Host "2. Testing GET /api/eco-challenges/active" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges/active" -Method GET
-    Write-Host "✅ Success: Found $($response.Count) active eco challenges" -ForegroundColor Green
+    $response = Invoke-RestMethod -Uri "$baseUrl/active" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) active challenges" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-# Test 3: Add new eco challenge
-Write-Host "3️⃣ Testing POST /api/eco-challenges" -ForegroundColor Cyan
-$newChallenge = @{
-    challengeId = "test-challenge-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
-    title = "Test Eco Challenge"
-    description = "This is a test eco challenge for API testing"
-    category = "Transportation"
-    difficulty = "Easy"
-    ecoPoints = 100
-    carbonSavings = 5.5
-    isActive = $true
-} | ConvertTo-Json
-
+# Test 3: Get currently active challenges
+Write-Host "3. Testing GET /api/eco-challenges/currently-active" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges" -Method POST -Body $newChallenge -ContentType "application/json"
-    Write-Host "✅ Success: Eco challenge added" -ForegroundColor Green
-    Write-Host "   Challenge ID: $($response.challenge.challengeId)" -ForegroundColor Gray
-    Write-Host "   Title: $($response.challenge.title)" -ForegroundColor Gray
-    $testChallengeId = $response.challenge.challengeId
+    $response = Invoke-RestMethod -Uri "$baseUrl/currently-active" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) currently active challenges" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
-    $testChallengeId = "test-challenge-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-# Test 4: Get specific eco challenge
-Write-Host "4️⃣ Testing GET /api/eco-challenges/$testChallengeId" -ForegroundColor Cyan
+# Test 4: Get challenges by category
+Write-Host "4. Testing GET /api/eco-challenges/category/Sustainability" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges/$testChallengeId" -Method GET
-    Write-Host "✅ Success: Found eco challenge" -ForegroundColor Green
-    Write-Host "   Title: $($response.title)" -ForegroundColor Gray
-    Write-Host "   Category: $($response.category)" -ForegroundColor Gray
+    $response = Invoke-RestMethod -Uri "$baseUrl/category/Sustainability" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) Sustainability challenges" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-# Test 5: Update eco challenge
-Write-Host "5️⃣ Testing PUT /api/eco-challenges/$testChallengeId" -ForegroundColor Cyan
-$updateChallenge = @{
-    title = "Updated Test Eco Challenge"
-    description = "This is an updated test eco challenge"
-    category = "Energy"
-    difficulty = "Medium"
-    ecoPoints = 150
-    carbonSavings = 7.5
-    isActive = $true
-} | ConvertTo-Json
-
+# Test 5: Get challenges by difficulty
+Write-Host "5. Testing GET /api/eco-challenges/difficulty/EASY" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges/$testChallengeId" -Method PUT -Body $updateChallenge -ContentType "application/json"
-    Write-Host "✅ Success: Eco challenge updated" -ForegroundColor Green
-    Write-Host "   New Title: $($response.challenge.title)" -ForegroundColor Gray
-    Write-Host "   New Category: $($response.challenge.category)" -ForegroundColor Gray
+    $response = Invoke-RestMethod -Uri "$baseUrl/difficulty/EASY" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) EASY challenges" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-# Test 6: Get challenges by category
-Write-Host "6️⃣ Testing GET /api/eco-challenges/category/Energy" -ForegroundColor Cyan
+# Test 6: Get challenges with available spots
+Write-Host "6. Testing GET /api/eco-challenges/available" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges/category/Energy" -Method GET
-    Write-Host "✅ Success: Found $($response.Count) Energy challenges" -ForegroundColor Green
+    $response = Invoke-RestMethod -Uri "$baseUrl/available" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) challenges with available spots" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-# Test 7: Delete eco challenge
-Write-Host "7️⃣ Testing DELETE /api/eco-challenges/$testChallengeId" -ForegroundColor Cyan
+# Test 7: Search challenges by title
+Write-Host "7. Testing GET /api/eco-challenges/search?title=plastic" -ForegroundColor Cyan
 try {
-    $response = Invoke-RestMethod -Uri "$baseUrl/api/eco-challenges/$testChallengeId" -Method DELETE
-    Write-Host "✅ Success: Eco challenge deleted" -ForegroundColor Green
+    $response = Invoke-RestMethod -Uri "$baseUrl/search?title=plastic" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) challenges matching 'plastic'" -ForegroundColor Green
 } catch {
-    Write-Host "❌ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
-Write-Host "🎉 Eco Challenge API Testing Complete!" -ForegroundColor Green
+# Test 8: Filter challenges by criteria
+Write-Host "8. Testing GET /api/eco-challenges/filter?category=Energy&minPoints=50" -ForegroundColor Cyan
+try {
+    $response = Invoke-RestMethod -Uri "$baseUrl/filter?category=Energy&minPoints=50" -Method GET
+    Write-Host "✓ Success: Found $($response.Count) Energy challenges with 50+ points" -ForegroundColor Green
+} catch {
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
+}
+Write-Host ""
+
+# Test 9: Get specific challenge by ID (if challenges exist)
+Write-Host "9. Testing GET /api/eco-challenges/1" -ForegroundColor Cyan
+try {
+    $response = Invoke-RestMethod -Uri "$baseUrl/1" -Method GET
+    Write-Host "✓ Success: Found challenge with ID 1: $($response.title)" -ForegroundColor Green
+} catch {
+    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
+}
+Write-Host ""
+
+Write-Host "Eco Challenge API Testing Complete!" -ForegroundColor Green
+Write-Host ""
+Write-Host "Next steps:" -ForegroundColor Yellow
+Write-Host "1. Test user challenge endpoints (join, progress, complete)" -ForegroundColor Gray
+Write-Host "2. Test challenge creation (admin endpoints)" -ForegroundColor Gray
+Write-Host "3. Integrate with frontend application" -ForegroundColor Gray

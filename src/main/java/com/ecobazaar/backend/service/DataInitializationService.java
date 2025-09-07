@@ -35,6 +35,9 @@ public class DataInitializationService {
     
     @Autowired
     private UserSettingsRepository userSettingsRepository;
+    
+    @Autowired
+    private EcoChallengeRepository ecoChallengeRepository;
 
     /**
      * Initialize database with sample data if it's empty
@@ -55,6 +58,9 @@ public class DataInitializationService {
             
             // Initialize wishlists
             result.append(initializeWishlists());
+            
+            // Initialize eco challenges
+            result.append(initializeEcoChallenges());
             
             result.append("\nSample data initialization completed successfully!\n");
             result.append(getInitializationStats());
@@ -278,6 +284,77 @@ public class DataInitializationService {
     }
 
     /**
+     * Initialize sample eco challenges
+     */
+    private String initializeEcoChallenges() {
+        try {
+            if (ecoChallengeRepository.count() > 0) {
+                return "Eco challenges already exist, skipping...\n";
+            }
+            
+            List<EcoChallenge> challenges = Arrays.asList(
+                createEcoChallenge("30-Day Plastic Free Challenge", 
+                    "Go 30 days without using single-use plastic products. This includes plastic bags, bottles, straws, and packaging.", 
+                    100, 30, "Sustainability", "MEDIUM", "🌱", "#4CAF50"),
+                createEcoChallenge("Energy Saving Challenge", 
+                    "Reduce your energy consumption by 20% for 14 days. Use energy-efficient appliances and turn off unused devices.", 
+                    75, 14, "Energy", "EASY", "⚡", "#FF9800"),
+                createEcoChallenge("Zero Waste Week", 
+                    "Generate zero waste for 7 days. Compost organic waste, recycle properly, and avoid single-use items.", 
+                    50, 7, "Waste Reduction", "HARD", "♻️", "#2196F3"),
+                createEcoChallenge("Plant-Based Diet Challenge", 
+                    "Follow a plant-based diet for 21 days. Reduce your carbon footprint through dietary choices.", 
+                    80, 21, "Food & Diet", "MEDIUM", "🥗", "#8BC34A"),
+                createEcoChallenge("Water Conservation Challenge", 
+                    "Reduce water usage by 30% for 14 days. Take shorter showers, fix leaks, and use water-efficient appliances.", 
+                    60, 14, "Water Conservation", "EASY", "💧", "#00BCD4"),
+                createEcoChallenge("Sustainable Transportation", 
+                    "Use only eco-friendly transportation for 30 days. Walk, bike, use public transport, or carpool.", 
+                    90, 30, "Transportation", "HARD", "🚲", "#9C27B0"),
+                createEcoChallenge("Digital Detox Challenge", 
+                    "Reduce screen time by 50% for 7 days. Spend more time outdoors and with nature.", 
+                    40, 7, "Lifestyle", "EASY", "📱", "#607D8B"),
+                createEcoChallenge("Local Shopping Challenge", 
+                    "Buy only locally produced items for 14 days. Support local businesses and reduce transportation emissions.", 
+                    70, 14, "Shopping", "MEDIUM", "🏪", "#795548"),
+                createEcoChallenge("Green Home Challenge", 
+                    "Make your home more eco-friendly for 30 days. Use natural cleaning products, reduce energy consumption.", 
+                    85, 30, "Home & Living", "MEDIUM", "🏠", "#4CAF50"),
+                createEcoChallenge("Ocean Cleanup Challenge", 
+                    "Participate in beach cleanups or reduce ocean pollution for 21 days. Every action counts!", 
+                    95, 21, "Ocean Conservation", "HARD", "🌊", "#00BCD4")
+            );
+            
+            ecoChallengeRepository.saveAll(challenges);
+            return String.format("Initialized %d eco challenges\n", challenges.size());
+            
+        } catch (Exception e) {
+            return "Error initializing eco challenges: " + e.getMessage() + "\n";
+        }
+    }
+    
+    /**
+     * Create an eco challenge entity
+     */
+    private EcoChallenge createEcoChallenge(String title, String description, Integer points, 
+                                          Integer duration, String category, String difficultyLevel, 
+                                          String icon, String color) {
+        EcoChallenge challenge = new EcoChallenge();
+        challenge.setTitle(title);
+        challenge.setDescription(description);
+        challenge.setPoints(points);
+        challenge.setDuration(duration);
+        challenge.setCategory(category);
+        challenge.setDifficultyLevel(difficultyLevel);
+        challenge.setIcon(icon);
+        challenge.setColor(color);
+        challenge.setIsActive(true);
+        challenge.setCurrentParticipants(0);
+        challenge.setMaxParticipants(100); // Default max participants
+        return challenge;
+    }
+
+    /**
      * Get initialization statistics
      */
     public String getInitializationStats() {
@@ -287,12 +364,14 @@ public class DataInitializationService {
             "Products: %d\n" +
             "Stores: %d\n" +
             "Wishlists: %d\n" +
-            "User Settings: %d",
+            "User Settings: %d\n" +
+            "Eco Challenges: %d",
             userRepository.count(),
             productRepository.count(),
             storeRepository.count(),
             wishlistRepository.count(),
-            userSettingsRepository.count()
+            userSettingsRepository.count(),
+            ecoChallengeRepository.count()
         );
     }
 
