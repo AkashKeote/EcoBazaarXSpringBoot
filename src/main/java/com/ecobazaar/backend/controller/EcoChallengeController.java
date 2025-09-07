@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/eco-challenges")
+@RequestMapping("/eco-challenges")
 @CrossOrigin(origins = "*")
 public class EcoChallengeController {
     
