@@ -74,6 +74,26 @@ public class DataInitializationController {
             ));
         }
     }
+
+    /**
+     * Force reinitialize eco challenges (fixes database structure issues)
+     */
+    @PostMapping("/fix-eco-challenges")
+    public ResponseEntity<Map<String, Object>> fixEcoChallenges() {
+        try {
+            String result = dataInitializationService.forceReinitializeEcoChallenges();
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Eco challenges fixed successfully",
+                "details", result
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of(
+                "success", false,
+                "message", "Error fixing eco challenges: " + e.getMessage()
+            ));
+        }
+    }
 }
 
 

@@ -381,6 +381,23 @@ public class DataInitializationService {
     public boolean needsInitialization() {
         return productRepository.count() == 0 && storeRepository.count() == 0;
     }
+
+    /**
+     * Force reinitialize eco challenges (clears existing data and recreates)
+     */
+    public String forceReinitializeEcoChallenges() {
+        try {
+            // Clear existing eco challenges
+            ecoChallengeRepository.deleteAll();
+            
+            // Reinitialize eco challenges
+            String result = initializeEcoChallenges();
+            
+            return "Eco challenges force reinitialized successfully!\n" + result;
+        } catch (Exception e) {
+            return "Error force reinitializing eco challenges: " + e.getMessage();
+        }
+    }
 }
 
 
