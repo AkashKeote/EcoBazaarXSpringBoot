@@ -1,7 +1,7 @@
 package com.ecobazaar.backend.controller;
 
 import com.ecobazaar.backend.entity.EcoChallenge;
-import com.ecobazaar.backend.repository.EcoChallengeRepository;
+import com.ecobazaar.backend.service.EcoChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +16,17 @@ import java.util.Optional;
 public class EcoChallengeController {
 
     @Autowired
-    private EcoChallengeRepository ecoChallengeRepository;
+    private EcoChallengeService ecoChallengeService;
 
     // Get all eco challenges
     @GetMapping
     public ResponseEntity<List<EcoChallenge>> getAllEcoChallenges() {
         try {
-            List<EcoChallenge> challenges = ecoChallengeRepository.findAll();
+            List<EcoChallenge> challenges = ecoChallengeService.getAllChallenges();
+            System.out.println("✅ Fetched " + challenges.size() + " eco challenges from database");
             return ResponseEntity.ok(challenges);
         } catch (Exception e) {
-            System.err.println("Error fetching eco challenges: " + e.getMessage());
+            System.err.println("❌ Error fetching eco challenges: " + e.getMessage());
             return ResponseEntity.internalServerError().body(List.of());
         }
     }
@@ -34,10 +35,11 @@ public class EcoChallengeController {
     @GetMapping("/active")
     public ResponseEntity<List<EcoChallenge>> getActiveEcoChallenges() {
         try {
-            List<EcoChallenge> challenges = ecoChallengeRepository.findByIsActiveTrue();
+            List<EcoChallenge> challenges = ecoChallengeService.getActiveChallenges();
+            System.out.println("✅ Fetched " + challenges.size() + " active eco challenges from database");
             return ResponseEntity.ok(challenges);
         } catch (Exception e) {
-            System.err.println("Error fetching active eco challenges: " + e.getMessage());
+            System.err.println("❌ Error fetching active eco challenges: " + e.getMessage());
             return ResponseEntity.internalServerError().body(List.of());
         }
     }
@@ -46,14 +48,16 @@ public class EcoChallengeController {
     @GetMapping("/{challengeId}")
     public ResponseEntity<EcoChallenge> getEcoChallengeById(@PathVariable String challengeId) {
         try {
-            Optional<EcoChallenge> challenge = ecoChallengeRepository.findByChallengeId(challengeId);
+            Optional<EcoChallenge> challenge = ecoChallengeService.getChallengeById(challengeId);
             if (challenge.isPresent()) {
+                System.out.println("✅ Found eco challenge: " + challengeId);
                 return ResponseEntity.ok(challenge.get());
             } else {
+                System.out.println("❌ Eco challenge not found: " + challengeId);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            System.err.println("Error fetching eco challenge: " + e.getMessage());
+            System.err.println("❌ Error fetching eco challenge: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -62,10 +66,11 @@ public class EcoChallengeController {
     @GetMapping("/category/{category}")
     public ResponseEntity<List<EcoChallenge>> getEcoChallengesByCategory(@PathVariable String category) {
         try {
-            List<EcoChallenge> challenges = ecoChallengeRepository.findByCategory(category);
+            List<EcoChallenge> challenges = ecoChallengeService.getChallengesByCategory(category);
+            System.out.println("✅ Fetched " + challenges.size() + " eco challenges for category: " + category);
             return ResponseEntity.ok(challenges);
         } catch (Exception e) {
-            System.err.println("Error fetching eco challenges by category: " + e.getMessage());
+            System.err.println("❌ Error fetching eco challenges by category: " + e.getMessage());
             return ResponseEntity.internalServerError().body(List.of());
         }
     }
@@ -90,7 +95,7 @@ public class EcoChallengeController {
             }
             
             // Check if challenge ID already exists
-            if (ecoChallengeRepository.existsByChallengeId(ecoChallenge.getChallengeId())) {
+            if (ecoChallengeService.challengeExists(ecoChallenge.getChallengeId())) {
                 return ResponseEntity.badRequest().body(Map.of(
                     "success", false,
                     "message", "Challenge ID already exists"
@@ -122,7 +127,8 @@ public class EcoChallengeController {
                 ecoChallenge.setIsActive(true);
             }
             
-            EcoChallenge savedChallenge = ecoChallengeRepository.save(ecoChallenge);
+            EcoChallenge savedChallenge = ecoChallengeService.saveChallenge(ecoChallenge);
+            System.out.println("✅ Successfully added eco challenge: " + savedChallenge.getChallengeId());
             return ResponseEntity.ok(Map.of(
                 "success", true,
                 "message", "Eco challenge added successfully",
@@ -143,7 +149,7 @@ public class EcoChallengeController {
             @PathVariable String challengeId, 
             @RequestBody EcoChallenge challengeDetails) {
         try {
-            Optional<EcoChallenge> challengeOptional = ecoChallengeRepository.findByChallengeId(challengeId);
+            Optional<EcoChallenge> challengeOptional = ecoChallengeService.getChallengeById(challengeId);
             if (challengeOptional.isPresent()) {
                 EcoChallenge challenge = challengeOptional.get();
                 challenge.setTitle(challengeDetails.getTitle());
@@ -156,13 +162,15 @@ public class EcoChallengeController {
                 challenge.setStartDate(challengeDetails.getStartDate());
                 challenge.setEndDate(challengeDetails.getEndDate());
                 
-                EcoChallenge updatedChallenge = ecoChallengeRepository.save(challenge);
+                EcoChallenge updatedChallenge = ecoChallengeService.saveChallenge(challenge);
+                System.out.println("✅ Successfully updated eco challenge: " + challengeId);
                 return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Eco challenge updated successfully",
                     "challenge", updatedChallenge
                 ));
             } else {
+                System.out.println("❌ Eco challenge not found for update: " + challengeId);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
@@ -178,14 +186,16 @@ public class EcoChallengeController {
     @DeleteMapping("/{challengeId}")
     public ResponseEntity<Map<String, Object>> deleteEcoChallenge(@PathVariable String challengeId) {
         try {
-            Optional<EcoChallenge> challengeOptional = ecoChallengeRepository.findByChallengeId(challengeId);
+            Optional<EcoChallenge> challengeOptional = ecoChallengeService.getChallengeById(challengeId);
             if (challengeOptional.isPresent()) {
-                ecoChallengeRepository.delete(challengeOptional.get());
+                ecoChallengeService.deleteChallenge(challengeId);
+                System.out.println("✅ Successfully deleted eco challenge: " + challengeId);
                 return ResponseEntity.ok(Map.of(
                     "success", true,
                     "message", "Eco challenge deleted successfully"
                 ));
             } else {
+                System.out.println("❌ Eco challenge not found for deletion: " + challengeId);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {

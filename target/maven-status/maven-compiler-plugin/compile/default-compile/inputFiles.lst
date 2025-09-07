@@ -20,6 +20,7 @@ C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecob
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\entity\Store.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\repository\EcoChallengeRepository.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\repository\WishlistItemRepository.java
+C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\controller\HealthController.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\repository\UserRepository.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\service\WishlistService.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\repository\UserOrderRepository.java
@@ -31,6 +32,7 @@ C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecob
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\config\WebConfig.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\controller\ProductController.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\entity\PaymentStatus.java
+C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\service\EcoChallengeService.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\entity\Product.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\entity\Order.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\MigrationRunner.java
@@ -38,6 +40,7 @@ C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecob
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\controller\MigrationController.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\model\UserRegistration.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\service\DataMigrationService.java
+C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\service\EcoChallengeDataInitializationService.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\entity\Wishlist.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\repository\ProductRepository.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\repository\StoreRepository.java
@@ -53,3 +56,4 @@ C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecob
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\entity\PaymentTransaction.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\model\AppSettings.java
 C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\model\SyncSettings.java
+C:\Users\AkashK\Desktop\Eco\EcoBazaarX\EcoBazaarX-Backend\src\main\java\com\ecobazaar\backend\controller\TestController.java

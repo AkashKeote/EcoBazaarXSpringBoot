@@ -2,6 +2,7 @@ com\ecobazaar\backend\entity\OrderStatus.class
 com\ecobazaar\backend\controller\ProductController.class
 com\ecobazaar\backend\entity\WishlistItem.class
 com\ecobazaar\backend\repository\WishlistRepository.class
+com\ecobazaar\backend\controller\HealthController.class
 com\ecobazaar\backend\entity\EcoChallenge.class
 com\ecobazaar\backend\controller\StoreController.class
 com\ecobazaar\backend\repository\CartRepository.class
@@ -12,11 +13,13 @@ com\ecobazaar\backend\repository\UserSettingsRepository.class
 com\ecobazaar\backend\repository\ProductRepository.class
 com\ecobazaar\backend\service\AuthService.class
 com\ecobazaar\backend\repository\WishlistItemRepository.class
+com\ecobazaar\backend\service\EcoChallengeDataInitializationService.class
 com\ecobazaar\backend\EcoBazaarXApplication.class
 com\ecobazaar\backend\entity\Wishlist.class
 com\ecobazaar\backend\config\WebConfig.class
 com\ecobazaar\backend\controller\MigrationController.class
 com\ecobazaar\backend\controller\EcoChallengeController.class
+com\ecobazaar\backend\controller\TestController.class
 com\ecobazaar\backend\entity\Product.class
 com\ecobazaar\backend\model\AppSettings.class
 com\ecobazaar\backend\repository\StoreRepository.class
@@ -27,6 +30,7 @@ com\ecobazaar\backend\entity\PaymentTransaction.class
 com\ecobazaar\backend\entity\UserSettings.class
 com\ecobazaar\backend\entity\Store.class
 com\ecobazaar\backend\controller\SettingsController.class
+com\ecobazaar\backend\service\EcoChallengeService.class
 com\ecobazaar\backend\config\SecurityConfig.class
 com\ecobazaar\backend\entity\Cart.class
 com\ecobazaar\backend\entity\UserRole.class
