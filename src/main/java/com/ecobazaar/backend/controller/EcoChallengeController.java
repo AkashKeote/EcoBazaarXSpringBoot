@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/eco-challenges")
-@CrossOrigin(origins = "*")
 public class EcoChallengeController {
     
     @Autowired

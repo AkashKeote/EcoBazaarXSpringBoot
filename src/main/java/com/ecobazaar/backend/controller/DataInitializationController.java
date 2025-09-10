@@ -9,7 +9,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/init")
-@CrossOrigin(origins = "*")
 public class DataInitializationController {
 
     @Autowired

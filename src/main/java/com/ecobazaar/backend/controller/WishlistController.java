@@ -10,7 +10,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/wishlist")
-@CrossOrigin(origins = "*")
 public class WishlistController {
 
     @Autowired
