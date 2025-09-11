@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/health")
-@CrossOrigin(origins = "*")
 public class HealthController {
 
     @GetMapping
