@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("/api/wishlist")
 public class WishlistController {
 
     @Autowired

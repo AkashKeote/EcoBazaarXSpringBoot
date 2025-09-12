@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/eco-challenges")
+@RequestMapping("/api/eco-challenges")
 public class EcoChallengeController {
     
     @Autowired
